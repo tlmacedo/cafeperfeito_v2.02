@@ -1,5 +1,6 @@
 package br.com.tlmacedo.cafeperfeito.nfe;
 
+import br.com.cafeperfeito.xsd.configNFe.config.InfRespTec;
 import br.com.tlmacedo.cafeperfeito.model.dao.EmpresaDAO;
 import br.com.tlmacedo.cafeperfeito.model.enums.TipoEndereco;
 import br.com.tlmacedo.cafeperfeito.model.vo.*;
@@ -99,10 +100,7 @@ public class Nfe_EnviNfeVO {
                         .filter(natOp -> natOp.getId() == getSaidaProdutoNfe().naturezaOperacaoProperty().getValue())
                         .findFirst().get().getDescricao()
         ));
-        System.out.printf("BD modFrete: [%s]\n", getSaidaProdutoNfe().modFreteProperty().getValue());
-        System.out.printf("BD modFrete: [%s]\n", getSaidaProdutoNfe().modFreteProperty().getValue().intValue());
-        MYINFNFE.getIde().getMods().getMod().stream()
-                .forEach(System.out::println);
+
         getIdeVO().setMod(MYINFNFE.getIde().getMods().getMod().stream()
                 .filter(mod -> mod.getId() == getSaidaProdutoNfe().modeloProperty().getValue().intValue())
                 .findFirst().get().getDescricao());
@@ -218,8 +216,8 @@ public class Nfe_EnviNfeVO {
         getEntregaVO().setxMun(destinatarioEntrega.municipioProperty().getValue().descricaoProperty().getValue().toUpperCase());
         getEntregaVO().setUF(destinatarioEntrega.municipioProperty().getValue().ufProperty().getValue().siglaProperty().getValue().toUpperCase());
         getEntregaVO().setCEP(destinatarioEntrega.cepProperty().getValue());
-        getEntregaVO().setcPais(TCONFIG.getNfe().getCPais());
-        getEntregaVO().setxPais(TCONFIG.getNfe().getNPais());
+        getEntregaVO().setcPais(MYINFNFE.getMyConfig().getCPais().toString());
+        getEntregaVO().setxPais(MYINFNFE.getMyConfig().getNPais());
     }
 
     private void detVOList_write() {
@@ -423,10 +421,13 @@ public class Nfe_EnviNfeVO {
     }
 
     private void infRespTecVO_write() {
-        getInfRespTecVO().setCnpj(TCONFIG.getNfe().getInfRespTec().getCnpj());
-        getInfRespTecVO().setxContato(TCONFIG.getNfe().getInfRespTec().getXContato());
-        getInfRespTecVO().setEmail(TCONFIG.getNfe().getInfRespTec().getEmail());
-        getInfRespTecVO().setFone(TCONFIG.getNfe().getInfRespTec().getFone());
+        InfRespTec respTec = MYINFNFE.getMyConfig().getInfRespTecs().getInfRespTec().stream()
+                .filter(infRespTec -> infRespTec.getId() == UsuarioLogado.getUsuario().getId())
+                .findFirst().orElse(MYINFNFE.getMyConfig().getInfRespTecs().getInfRespTec().get(0));
+        getInfRespTecVO().setCnpj(respTec.getCnpj());
+        getInfRespTecVO().setxContato(respTec.getXContato());
+        getInfRespTecVO().setEmail(respTec.getEmail());
+        getInfRespTecVO().setFone(respTec.getFone());
     }
 
 

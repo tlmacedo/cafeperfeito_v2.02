@@ -12,8 +12,10 @@ import br.com.tlmacedo.cafeperfeito.service.ServiceValidarDado;
 import br.com.tlmacedo.cafeperfeito.service.ServiceVariaveisSistema;
 import br.com.tlmacedo.nfe.service.NFev400;
 import br.com.tlmacedo.service.ServiceAlertMensagem;
+import javafx.scene.control.ButtonType;
 
 import javax.sql.rowset.serial.SerialBlob;
+import java.io.FileNotFoundException;
 import java.math.BigDecimal;
 
 import static br.com.tlmacedo.cafeperfeito.interfaces.Regex_Convert.DTF_DATA;
@@ -32,28 +34,47 @@ public class Nfe {
                     TCONFIG.getPersonalizacao().getStyleSheets());
 
 
-    public Nfe(SaidaProdutoNfe saidaProdutoNfe, boolean imprimeLote) {
+    private boolean errCertificado() {
+        boolean err = true, repete = false;
+        do {
+            try {
+                err = getnFev400().errNoCertificado();
+            } catch (Exception e) {
+                ALERT_MENSAGEM.setCabecalho("Certificado digital");
+                ALERT_MENSAGEM.setContentText("erro no certificado, deseja tentar novamente?");
+                if (ALERT_MENSAGEM.alertYesNo().get() == ButtonType.YES) {
+                    repete = true;
+                } else {
+                    repete = false;
+                }
+            }
+        } while (err && repete);
+        if (err && repete == false) {
+            ALERT_MENSAGEM.setContentText("Operação cancelada pelo usuário!");
+            ALERT_MENSAGEM.alertOk();
+        }
+        return (err);
+    }
+
+    public Nfe(SaidaProdutoNfe saidaProdutoNfe, boolean imprimeLote) throws FileNotFoundException {
         setSaidaProdutoNfe(saidaProdutoNfe);
 
-        setnFev400(new NFev400(null, ALERT_MENSAGEM,
-                MY_ZONE_TIME, (MYINFNFE.getMyConfig().getTpAmb() == 1), true));
-        if (!getnFev400().validCertificate())
+        setnFev400(new NFev400(null,
+                MY_ZONE_TIME,
+                (MYINFNFE.getMyConfig().getTpAmb().intValue() == 1),
+                true));
+        if (errCertificado())
             return;
 
         if (saidaProdutoNfe.idProperty().getValue() == 0)
             newSaidaProdutoNfe(imprimeLote);
 
         if (getSaidaProdutoNfe().getXmlProtNfe() != null)
-            setXml(getSaidaProdutoNfe().getXmlProtNfe().toString());
+            getnFev400().newNFev400_xmlProtNfe(getSaidaProdutoNfe().getXmlProtNfe().toString());
         else if (getSaidaProdutoNfe().getXmlConsRecibo() != null)
-            setXml(getSaidaProdutoNfe().getXmlConsRecibo().toString());
+            getnFev400().newNFev400_xmlConsRecibo(getSaidaProdutoNfe().getXmlConsRecibo().toString());
         else if (getSaidaProdutoNfe().getXmlAssinatura() != null)
-            setXml(getSaidaProdutoNfe().getXmlAssinatura().toString());
-        else
-            setXml(null);
-
-        if (getXml() != null)
-            getnFev400().newNFev400(getXml());
+            getnFev400().newNFev400_xmlAssinado(getSaidaProdutoNfe().getXmlAssinatura().toString());
         else
             getnFev400().newNFev400(new Nfe_EnviNfeVO(getSaidaProdutoNfe(), imprimeLote).getEnviNfeVO());
 
@@ -70,9 +91,9 @@ public class Nfe {
             if (getnFev400().getXmlAssinado() != null)
                 getSaidaProdutoNfe().setXmlAssinatura(new SerialBlob(getnFev400().getXmlAssinado().getBytes()));
 
-            System.out.printf("\npegando_meu_xmlConsRecibo:\n%s\n\n", getnFev400().getXmlConsRecibo());
-            if (getnFev400().getXmlConsRecibo() != null)
-                getSaidaProdutoNfe().setXmlConsRecibo(new SerialBlob(getnFev400().getXmlConsRecibo().getBytes()));
+            System.out.printf("\npegando_meu_xmlConsRecibo:\n%s\n\n", getnFev400().XML_CONS_RECIBO);
+            if (getnFev400().XML_CONS_RECIBO != null)
+                getSaidaProdutoNfe().setXmlConsRecibo(new SerialBlob(getnFev400().XML_CONS_RECIBO.getBytes()));
 
             System.out.printf("\npegando_meu_xmlProtNfe:\n%s\n\n", getnFev400().getXmlProtNfe());
             if (getnFev400().getXmlProtNfe() != null)
@@ -148,7 +169,7 @@ public class Nfe {
 
     private void addNumeroSerieUltimaNfe() {
         SaidaProdutoNfe nfeTemp;
-        int num = 606, serie = 1;
+        int num = 614, serie = 1;
         if ((nfeTemp = new SaidaProdutoNfeDAO().getAll(SaidaProdutoNfe.class, null, "numero DESC")
                 .stream().findFirst().orElse(null)) != null) {
             num = nfeTemp.numeroProperty().getValue() + 1;

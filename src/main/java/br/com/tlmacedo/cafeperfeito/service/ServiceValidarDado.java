@@ -113,7 +113,6 @@ public class ServiceValidarDado {
                 String.format("%09d", saidaProdutoNfe.numeroProperty().getValue()),
                 String.format("%d", saidaProdutoNfe.impressaoTpEmisProperty().getValue())
         );
-        System.out.printf("base_Chave_Nfe: [%s]\n", base);
         return String.format("%s%d", base, nfeDv(base));
     }
 

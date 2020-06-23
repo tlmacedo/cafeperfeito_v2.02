@@ -2,28 +2,28 @@
     <idLote>000000000000085</idLote>
     <indSinc>0</indSinc>
     <NFe>
-        <infNFe Id="NFe13190908009246000136550010000006061201919090" versao="4.00">
+        <infNFe Id="NFe13200608009246000136550010000006071202020064" versao="4.00">
             <ide>
                 <cUF>13</cUF>
-                <cNF>20191909</cNF>
+                <cNF>20202006</cNF>
                 <natOp>VENDA Dentro Do Estado</natOp>
                 <mod>55</mod>
                 <serie>1</serie>
-                <nNF>606</nNF>
-                <dhEmi>2019-09-30T00:00:00-04:00</dhEmi>
-                <dhSaiEnt>2019-09-30T00:00:00-04:00</dhSaiEnt>
+                <nNF>607</nNF>
+                <dhEmi>2020-06-19T00:00:00-04:00</dhEmi>
+                <dhSaiEnt>2020-06-19T00:00:00-04:00</dhSaiEnt>
                 <tpNF>1</tpNF>
                 <idDest>1</idDest>
                 <cMunFG>1302603</cMunFG>
                 <tpImp>1</tpImp>
                 <tpEmis>1</tpEmis>
-                <cDV>0</cDV>
+                <cDV>4</cDV>
                 <tpAmb>2</tpAmb>
                 <finNFe>1</finNFe>
                 <indFinal>1</indFinal>
                 <indPres>3</indPres>
                 <procEmi>0</procEmi>
-                <verProc>2.01</verProc>
+                <verProc>2.02</verProc>
             </ide>
             <emit>
                 <CNPJ>08009246000136</CNPJ>
@@ -354,18 +354,10 @@
             </total>
             <transp>
                 <modFrete>0</modFrete>
-                <transporta>
-                    <CNPJ>08009246000136</CNPJ>
-                    <xNome>T. L. MACEDO (CAFE PERFEITO)</xNome>
-                    <IE>042171865</IE>
-                    <xEnder>R TREZE DE MAIO, 159 - COROADO</xEnder>
-                    <xMun>MANAUS</xMun>
-                    <UF>AM</UF>
-                </transporta>
             </transp>
             <cobr>
                 <fat>
-                    <nFat>606</nFat>
+                    <nFat>607</nFat>
                     <vOrig>3370.60</vOrig>
                     <vDesc>180.00</vDesc>
                     <vLiq>3190.60</vLiq>
@@ -379,8 +371,8 @@
                 </detPag>
             </pag>
             <infAdic>
-                <infCpl>TOTAL R$ 3.190,60*T* DT. VENC.: 30/09/2019*N*DADOS BANCARIOS PARA TRANSFERENCIA*N*BANCO NUBANK
-                    AG: 0001 C/C: 90.846.088-3
+                <infCpl>TOTAL R$ 3.190,60*T*DT. VENC.: DT. VENC.: 30/09/2019*N*DADOS BANCARIOS PARA
+                    TRANSFERENCIA*N*BANCO NUBANK AG: 0001 C/C: 90.846.088-3
                 </infCpl>
             </infAdic>
             <infRespTec>
@@ -394,20 +386,20 @@
             <SignedInfo>
                 <CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
                 <SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
-                <Reference URI="#NFe13190908009246000136550010000006061201919090">
+                <Reference URI="#NFe13200608009246000136550010000006071202020064">
                     <Transforms>
                         <Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
                         <Transform Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
                     </Transforms>
                     <DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
-                    <DigestValue>l7HfGbTu/QLgFNLQPNA9z476TxE=</DigestValue>
+                    <DigestValue>XAX00nB9md8gt04HH60qpH+U6Fg=</DigestValue>
                 </Reference>
             </SignedInfo>
-            <SignatureValue>R0NtXtM3Dc3K77h3c2cJGdsGA/tEJKiWht9IgN/bYxbXSLrSVhhkNrS9EXqjsqUXbMqMWu7ashom&#13;
-                BNqnsPLtqExtJF/fBzWSZsosM2/xps7rFG01g/trNvwkmzbjqPfcMZeWLbfSzHxcds2eP8EJBsGH&#13;
-                TV8y9AgG44lLYWUqXKb0z70xqqpA5fyDEE6meLv5UBdPEd0gXuyNIbGqEuDHDc/qZqx9U9csTeaG&#13;
-                Kclo9OYgwbMvNOyL7rCkxNPz7j9RGSXa+AmuCADUp8EEc8fWKXjrmnD7XUm5kv0e5fSPFsP2PoOa&#13;
-                Up1bs3bGAVz45CqxVYkwIbFpLhnoCXSNQC0FQQ==
+            <SignatureValue>YimZzLlm/dFcjTlpoAUq/ZWXl0te3rD90vdZNbxS6ONflXGFRXk4T7V8+EdM9hLHlgrzM8ZE/ZQU&#13;
+                qJ1in4KIGZx+FVHWsPgxaAwIrdF+KYytwN3fq7CpOBpGeMJrCFPqqhnUXF6v3leb8Ne0GP8vCh+o&#13;
+                fZs79+TChZqQw95boPxtZ0PWqJXANJXXb8krbX9pkXYNpH2kmU6+BITO930cWRl2VsxdXDJ7FMxg&#13;
+                zLyd5pAmSKgaZUZtUE1prwduJtNolnWPW6PArzXGvFcvvTCT9uThTHVfuXEDYdYP4FzP4Q6aeeVX&#13;
+                a8YXox7/ZCluGB8m8WHvZlWkspQRv/dMwoJ6tw==
             </SignatureValue>
             <KeyInfo>
                 <X509Data>

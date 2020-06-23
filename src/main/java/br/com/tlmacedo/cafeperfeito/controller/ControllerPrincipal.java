@@ -22,6 +22,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
+import java.io.FileNotFoundException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -123,7 +124,11 @@ public class ControllerPrincipal implements Initializable, ModeloCafePerfeito {
                         saidaProdutoNfe.saidaProdutoProperty().setValue(saidaProduto);
                         saidaProduto.getSaidaProdutoNfeList().add(saidaProdutoNfe);
                     }
-                    new Nfe(saidaProdutoNfe, true);
+                    try {
+                        new Nfe(saidaProdutoNfe, true);
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
                 });
 
 

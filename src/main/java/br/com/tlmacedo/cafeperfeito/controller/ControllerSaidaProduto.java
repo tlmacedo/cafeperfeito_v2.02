@@ -42,8 +42,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static br.com.tlmacedo.cafeperfeito.interfaces.Regex_Convert.DTF_DATA;
-import static br.com.tlmacedo.cafeperfeito.service.ServiceVariaveisNFe.MYINFNFE;
 import static br.com.tlmacedo.cafeperfeito.service.ServiceVariaveisSistema.TCONFIG;
+import static br.com.tlmacedo.nfe.service.ServiceVariaveisNFe.MYINFNFE;
 import static java.time.temporal.ChronoUnit.DAYS;
 
 public class ControllerSaidaProduto implements Initializable, ModeloCafePerfeito {
