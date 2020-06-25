@@ -71,9 +71,10 @@ public class Nfe {
 
         if (getSaidaProdutoNfe().getXmlProtNfe() != null)
             getnFev400().newNFev400_xmlProtNfe(getSaidaProdutoNfe().getXmlProtNfe().toString());
-        else if (getSaidaProdutoNfe().getXmlConsRecibo() != null)
+        else if (getSaidaProdutoNfe().getXmlConsRecibo() != null) {
+            getnFev400().setXmlAssinado(getSaidaProdutoNfe().getXmlAssinatura().toString());
             getnFev400().newNFev400_xmlConsRecibo(getSaidaProdutoNfe().getXmlConsRecibo().toString());
-        else if (getSaidaProdutoNfe().getXmlAssinatura() != null)
+        } else if (getSaidaProdutoNfe().getXmlAssinatura() != null)
             getnFev400().newNFev400_xmlAssinado(getSaidaProdutoNfe().getXmlAssinatura().toString());
         else
             getnFev400().newNFev400(new Nfe_EnviNfeVO(getSaidaProdutoNfe(), imprimeLote).getEnviNfeVO());
@@ -95,10 +96,11 @@ public class Nfe {
             if (getnFev400().XML_CONS_RECIBO != null)
                 getSaidaProdutoNfe().setXmlConsRecibo(new SerialBlob(getnFev400().XML_CONS_RECIBO.getBytes()));
 
-            System.out.printf("\npegando_meu_xmlProtNfe:\n%s\n\n", getnFev400().getXmlProtNfe());
-            if (getnFev400().getXmlProtNfe() != null)
-                getSaidaProdutoNfe().setXmlProtNfe(new SerialBlob(getnFev400().getXmlProtNfe().getBytes()));
-
+            System.out.printf("\npegando_meu_xmlProcNfe:\n%s\n\n", getnFev400().getXmlProcNfe());
+            if (getnFev400().getXmlProcNfe() != null) {
+                getSaidaProdutoNfe().setXmlProtNfe(new SerialBlob(getnFev400().getXmlProcNfe().getBytes()));
+                getSaidaProdutoNfe().setDigVal(getnFev400().DIG_VAL);
+            }
             setSaidaProdutoNfe(new SaidaProdutoNfeDAO().merger(getSaidaProdutoNfe()));
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -169,7 +171,7 @@ public class Nfe {
 
     private void addNumeroSerieUltimaNfe() {
         SaidaProdutoNfe nfeTemp;
-        int num = 614, serie = 1;
+        int num = 616, serie = 1;
         if ((nfeTemp = new SaidaProdutoNfeDAO().getAll(SaidaProdutoNfe.class, null, "numero DESC")
                 .stream().findFirst().orElse(null)) != null) {
             num = nfeTemp.numeroProperty().getValue() + 1;
