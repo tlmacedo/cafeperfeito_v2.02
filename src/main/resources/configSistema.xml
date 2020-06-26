@@ -65,6 +65,10 @@
         </splash-imagens>
     </personalizacao>
     <paths>
+        <versaoDanfeNFe>2.01</versaoDanfeNFe>
+        <pathDanfeNFe>/relatorio_v2.01/recibo_v2.01.jasper</pathDanfeNFe>
+        <versaoRecibo>2.01</versaoRecibo>
+        <pathRecibo>/relatorio_v2.01/danfe_v2.01.jasper</pathRecibo>
         <pathSalvarArquivo>/src/main/resources</pathSalvarArquivo>
         <pathIconeSistema>/image/ico/principal/</pathIconeSistema>
         <pathStyleSheets>/style/</pathStyleSheets>

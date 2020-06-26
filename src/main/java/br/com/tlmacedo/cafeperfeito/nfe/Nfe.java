@@ -10,6 +10,7 @@ import br.com.tlmacedo.cafeperfeito.service.ServiceMascara;
 import br.com.tlmacedo.cafeperfeito.service.ServiceSegundoPlano;
 import br.com.tlmacedo.cafeperfeito.service.ServiceValidarDado;
 import br.com.tlmacedo.cafeperfeito.service.ServiceVariaveisSistema;
+import br.com.tlmacedo.nfe.service.ExceptionDuplicidadeNFe;
 import br.com.tlmacedo.nfe.service.NFev400;
 import br.com.tlmacedo.service.ServiceAlertMensagem;
 import javafx.scene.control.ButtonType;
@@ -80,9 +81,14 @@ public class Nfe {
             getnFev400().newNFev400(new Nfe_EnviNfeVO(getSaidaProdutoNfe(), imprimeLote).getEnviNfeVO());
 
         boolean retorno;
-        if (retorno = new ServiceSegundoPlano().executaListaTarefas(getnFev400().getNewTaskNFe(), "NF-e"))
-            update_MyNfe();
-        System.out.printf("\nretorno: [%s]\n", retorno);
+        try {
+            if (retorno = new ServiceSegundoPlano().executaListaTarefas(getnFev400().getNewTaskNFe(), "NF-e"))
+                update_MyNfe();
+            System.out.printf("\nretorno: [%s]\n", retorno);
+        } catch (ExceptionDuplicidadeNFe exceptionDuplicidadeNFe) {
+            System.out.printf("\nerroufeio!!!!\n");
+            exceptionDuplicidadeNFe.getMessage();
+        }
 
     }
 
