@@ -1,6 +1,6 @@
 package br.com.tlmacedo.cafeperfeito.nfe;
 
-import br.com.cafeperfeito.xsd.configNFe.config.InfRespTec;
+import br.com.cafeperfeito.xsd.config_nfe.config.InfRespTec;
 import br.com.tlmacedo.cafeperfeito.model.dao.EmpresaDAO;
 import br.com.tlmacedo.cafeperfeito.model.enums.TipoEndereco;
 import br.com.tlmacedo.cafeperfeito.model.vo.*;

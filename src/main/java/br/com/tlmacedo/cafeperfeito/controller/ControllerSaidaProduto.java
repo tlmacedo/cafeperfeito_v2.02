@@ -1,6 +1,6 @@
 package br.com.tlmacedo.cafeperfeito.controller;
 
-import br.com.cafeperfeito.xsd.configNFe.config.*;
+import br.com.cafeperfeito.xsd.config_nfe.config.*;
 import br.com.tlmacedo.cafeperfeito.interfaces.ModeloCafePerfeito;
 import br.com.tlmacedo.cafeperfeito.model.dao.*;
 import br.com.tlmacedo.cafeperfeito.model.enums.*;

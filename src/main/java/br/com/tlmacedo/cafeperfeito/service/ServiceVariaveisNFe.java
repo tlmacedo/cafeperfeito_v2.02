@@ -1,6 +1,6 @@
 package br.com.tlmacedo.cafeperfeito.service;
 
-import br.com.cafeperfeito.xsd.configNFe.config.MyInfNfe;
+import br.com.cafeperfeito.xsd.config_nfe.config.MyInfNfe;
 
 import javax.xml.bind.JAXBException;
 import java.io.FileNotFoundException;

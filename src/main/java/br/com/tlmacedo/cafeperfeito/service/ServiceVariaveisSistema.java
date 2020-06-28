@@ -1,8 +1,6 @@
 package br.com.tlmacedo.cafeperfeito.service;
 
-//import br.com.tlmacedo.cafeperfeito.xsd.sistema.config.TConfig;
-
-import br.com.cafeperfeito.xsd.configSistema.config.TConfig;
+import br.com.cafeperfeito.xsd.config_sis.config.TConfig;
 import br.com.tlmacedo.cafeperfeito.model.dao.UsuarioDAO;
 import br.com.tlmacedo.cafeperfeito.model.vo.Usuario;
 import br.com.tlmacedo.cafeperfeito.model.vo.UsuarioLogado;
