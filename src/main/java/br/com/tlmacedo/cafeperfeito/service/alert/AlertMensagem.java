@@ -1,4 +1,6 @@
-package br.com.tlmacedo.service.alert;
+package br.com.tlmacedo.cafeperfeito.service.alert;
+
+//import br.com.tlmacedo.cafeperfeito.service.ServiceVariaveisSistema;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -15,6 +17,8 @@ import javafx.util.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import static br.com.tlmacedo.cafeperfeito.service.ServiceVariaveisSistema.TCONFIG;
 
 //import static br.com.tlmacedo.cafeperfeito.service.ServiceVariaveisSistema.SPLASH_IMAGENS;
 //import static br.com.tlmacedo.cafeperfeito.service.ServiceVariaveisSistema.TCONFIG;
@@ -35,19 +39,12 @@ public class AlertMensagem {
     private static List<Button> btns = new ArrayList<>();
     private static Button btnOk, btnCancel, btnYes, btnNo, btnApply, btnClose, btnFinish;
     private static Label lblMsg = new Label(), lblContagem = new Label();
-    private static int TIME_OUT;
+    private static int TIME_OUT = TCONFIG.getTimeOut();
     private static Timeline timeline;
     private static ProgressBar progressBar;
     private static ProgressIndicator progressIndicator;
-    private static List SPLASH_IMAGENS;
-    private static String PATH_STYLE_SHEETS;
-
-    public AlertMensagem(int timeOut, List splashImagens, String pathStyleSheets) {
-        setTimeOut(timeOut);
-        setSplashImagens(splashImagens);
-        setPathStyleSheets(pathStyleSheets);
-
-    }
+    private static List SPLASH_IMAGENS = TCONFIG.getPersonalizacao().getSplashImagens().getImage();
+    private static String PATH_STYLE_SHEETS = TCONFIG.getPaths().getPathStyleSheets();
 
     public Optional<ButtonType> alertYesNo() {
         loadDialog();
@@ -104,75 +101,81 @@ public class AlertMensagem {
         return getDialog().showAndWait();
     }
 
-    public boolean alertProgressBar(Task<?> task, boolean isWait) {
-        setTask(task);
-        setRetornoWait(isWait);
+    public static class AlertProgressBar {
+        public AlertProgressBar(Task<?> task, String titulo, boolean isWait) {
+            setCabecalho(titulo);
+            setTask(task);
+            setRetornoWait(isWait);
 
-        setTimeline(newTimeLine(0));
+            setTimeline(newTimeLine(0));
 
-        loadDialog();
-        loadDialogPane();
-        getDialogPane().getStyleClass().remove("alertMsg_return");
-        getDialogPane().getStyleClass().add("alertMsg_progress");
+            loadDialog();
+            loadDialogPane();
+            getDialogPane().getStyleClass().remove("alertMsg_return");
+            getDialogPane().getStyleClass().add("alertMsg_progress");
 
 
-        if (isWait) {
-            setBtnOk(new Button());
-            getBtns().add(getBtnOk());
-        }
-        setBtnCancel(new Button());
-        getBtns().add(getBtnCancel());
-
-        addButton();
-
-        getDialogPane().setContent(contentProgress(!isWait));
-
-        startContagemRegressiva();
-
-        getBtnCancel().setOnAction(actionEvent -> getTask().cancel());
-
-        getTask().setOnFailed(event -> {
-            setRetornoProgressBar(false);
-            dialogClose();
-        });
-
-        getTask().setOnCancelled(event -> {
-            setRetornoProgressBar(false);
-            dialogClose();
-        });
-
-        getTask().setOnSucceeded(event -> {
-            setRetornoProgressBar(true);
-            getTimeline().stop();
             if (isWait) {
-                getProgressBar().setProgress(100);
-                addImage("/image/sis_logo_240dp.png");
-                getBtnOk().setDisable(false);
-            } else {
-                dialogClose();
+                setBtnOk(new Button());
+                getBtns().add(getBtnOk());
             }
-        });
+            setBtnCancel(new Button());
+            getBtns().add(getBtnCancel());
 
-        getTimeline().setOnFinished(event -> {
-            setRetornoProgressBar(false);
-            dialogClose();
-            return;
-        });
+            addButton();
 
-        setThread(new Thread(getTask()));
-        getThread().setDaemon(true);
-        getThread().start();
+            getDialogPane().setContent(contentProgress(!isWait));
 
-        getDialog().showAndWait();
+            startContagemRegressiva();
 
-        return isRetornoProgressBar();
+            getBtnCancel().setOnAction(actionEvent -> getTask().cancel());
+
+            getTask().setOnFailed(event -> {
+                setRetornoProgressBar(false);
+                dialogClose();
+            });
+
+            getTask().setOnCancelled(event -> {
+                setRetornoProgressBar(false);
+                dialogClose();
+            });
+
+            getTask().setOnSucceeded(event -> {
+                setRetornoProgressBar(true);
+                getTimeline().stop();
+                if (isWait) {
+                    getProgressBar().setProgress(100);
+                    addImage("/image/sis_logo_240dp.png");
+                    getBtnOk().setDisable(false);
+                } else {
+                    dialogClose();
+                }
+            });
+
+            getTimeline().setOnFinished(event -> {
+                setRetornoProgressBar(false);
+                dialogClose();
+                return;
+            });
+
+            setThread(new Thread(getTask()));
+            getThread().setDaemon(true);
+            getThread().start();
+
+            getDialog().showAndWait();
+
+        }
+
+        public boolean retorno() {
+            return isRetornoProgressBar();
+        }
     }
 
     /**
      * Begin Returns
      */
 
-    private VBox contentProgress(boolean loading) {
+    private static VBox contentProgress(boolean loading) {
         setProgressBar(new ProgressBar());
         getProgressBar().setProgress(ProgressBar.INDETERMINATE_PROGRESS);
         getProgressBar().prefWidthProperty().bind(getDialogPane().widthProperty().subtract(20));

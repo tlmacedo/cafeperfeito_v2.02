@@ -19,7 +19,7 @@ import br.com.tlmacedo.cafeperfeito.service.autoComplete.ServiceAutoCompleteComb
 import br.com.tlmacedo.cafeperfeito.service.format.FormatDataPicker;
 import br.com.tlmacedo.cafeperfeito.view.ViewContasAReceber;
 import br.com.tlmacedo.cafeperfeito.view.ViewRecebimento;
-import br.com.tlmacedo.service.ServiceAlertMensagem;
+import br.com.tlmacedo.service.alert.AlertMensagem;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
@@ -87,7 +87,7 @@ public class ControllerContasAReceber implements Initializable, ModeloCafePerfei
     private String nomeController = "contasAReceber";
     private ObjectProperty<StatusBarContasAReceber> statusBar = new SimpleObjectProperty<>(StatusBarContasAReceber.DIGITACAO);
     private EventHandler eventHandlerContasAReceber;
-    private ServiceAlertMensagem alertMensagem;
+    private AlertMensagem alertMensagem;
 
     private TmodelContasAReceber tmodelContasAReceber;
     private ObjectProperty<ContasAReceber> contasAReceber = new SimpleObjectProperty<>();
@@ -802,11 +802,11 @@ public class ControllerContasAReceber implements Initializable, ModeloCafePerfei
         this.eventHandlerContasAReceber = eventHandlerContasAReceber;
     }
 
-    public ServiceAlertMensagem getAlertMensagem() {
+    public AlertMensagem getAlertMensagem() {
         return alertMensagem;
     }
 
-    public void setAlertMensagem(ServiceAlertMensagem alertMensagem) {
+    public void setAlertMensagem(AlertMensagem alertMensagem) {
         this.alertMensagem = alertMensagem;
     }
 

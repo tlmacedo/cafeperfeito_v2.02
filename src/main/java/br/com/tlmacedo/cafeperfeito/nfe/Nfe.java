@@ -10,7 +10,7 @@ import br.com.tlmacedo.cafeperfeito.service.ServiceMascara;
 import br.com.tlmacedo.cafeperfeito.service.ServiceSegundoPlano;
 import br.com.tlmacedo.cafeperfeito.service.ServiceValidarDado;
 import br.com.tlmacedo.cafeperfeito.service.ServiceVariaveisSistema;
-import br.com.tlmacedo.nfe.service.ExceptionDuplicidadeNFe;
+import br.com.tlmacedo.nfe.service.ExceptionNFe;
 import br.com.tlmacedo.nfe.service.NFev400;
 import br.com.tlmacedo.service.ServiceAlertMensagem;
 import javafx.scene.control.ButtonType;
@@ -57,7 +57,7 @@ public class Nfe {
         return (err);
     }
 
-    public Nfe(SaidaProdutoNfe saidaProdutoNfe, boolean imprimeLote) throws FileNotFoundException {
+    public Nfe(SaidaProdutoNfe saidaProdutoNfe, boolean imprimeLote) throws ExceptionNFe, FileNotFoundException {
         setSaidaProdutoNfe(saidaProdutoNfe);
 
         setnFev400(new NFev400(null,
@@ -80,16 +80,20 @@ public class Nfe {
         else
             getnFev400().newNFev400(new Nfe_EnviNfeVO(getSaidaProdutoNfe(), imprimeLote).getEnviNfeVO());
 
-        boolean retorno;
+        boolean retorno = false;
         try {
             if (retorno = new ServiceSegundoPlano().executaListaTarefas(getnFev400().getNewTaskNFe(), "NF-e"))
                 update_MyNfe();
-            System.out.printf("\nretorno: [%s]\n", retorno);
-        } catch (ExceptionDuplicidadeNFe exceptionDuplicidadeNFe) {
+            System.out.printf("\nretornou");
+        } catch (ExceptionNFe ex) {
             System.out.printf("\nerroufeio!!!!\n");
-            exceptionDuplicidadeNFe.getMessage();
+//            if (ex instanceof ExceptionDuplicidadeNFe) {
+//                System.out.printf("aqui coloco minha mesagem para resolver o problema");
+//                ex.getMessage();
+//            }
+            ex.printStackTrace();
         }
-
+        System.out.printf("\nretorno: [%s]\n", retorno);
     }
 
     private void update_MyNfe() {

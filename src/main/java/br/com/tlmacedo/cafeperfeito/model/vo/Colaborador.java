@@ -16,6 +16,8 @@ import java.time.LocalDateTime;
 @Table(name = "colaborador")
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Colaborador implements Serializable {
+
+
     private static final long serialVersionUID = 1L;
 
     private LongProperty id = new SimpleLongProperty();

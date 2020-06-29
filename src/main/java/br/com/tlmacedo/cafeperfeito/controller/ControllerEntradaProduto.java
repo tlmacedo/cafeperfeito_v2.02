@@ -11,8 +11,8 @@ import br.com.tlmacedo.cafeperfeito.service.autoComplete.ServiceAutoCompleteComb
 import br.com.tlmacedo.cafeperfeito.service.format.ServiceFormatDataPicker;
 import br.com.tlmacedo.cafeperfeito.view.ViewEntradaProduto;
 import br.com.tlmacedo.service.ServiceAlertMensagem;
-import br.inf.portalfiscal.xsd.cte.procCTe.CteProc;
-import br.inf.portalfiscal.xsd.cte.procCTe.TCTe;
+import br.inf.portalfiscal.xsd.cte.procCTe_v300.CteProc;
+import br.inf.portalfiscal.xsd.cte.procCTe_v300.TCTe;
 import br.inf.portalfiscal.xsd.nfe.procNFe.TNfeProc;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;

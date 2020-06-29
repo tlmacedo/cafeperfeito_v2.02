@@ -1,4 +1,4 @@
-package br.com.tlmacedo.service.alert;
+package br.com.tlmacedo.cafeperfeito.service.alert;
 
 import javafx.scene.control.Button;
 
