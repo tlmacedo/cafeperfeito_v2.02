@@ -1,6 +1,6 @@
 package br.com.tlmacedo.cafeperfeito.service;
 
-import br.com.tlmacedo.cafeperfeito.service.alert.AlertMensagem;
+import br.com.tlmacedo.cafeperfeito.service.alert.Alert_ProgressBar;
 import javafx.concurrent.Task;
 
 import java.util.List;
@@ -17,8 +17,7 @@ public class ServiceSegundoPlano {
 //        alertMensagem.setCabecalho(titulo);
 //        return alertMensagem.alertProgressBar(task, false);
 
-        AlertMensagem.AlertProgressBar alertProgressBar = new AlertMensagem.AlertProgressBar(task, titulo, false);
-        return alertProgressBar.retorno();
+        return new Alert_ProgressBar(task, titulo, false).retorno();
     }
 
     public boolean executaListaTarefas(List<Task<?>> taskList, String titulo) throws Exception {

@@ -1,6 +1,5 @@
 package br.com.tlmacedo.cafeperfeito.service.alert;
 
-//import br.com.tlmacedo.cafeperfeito.service.ServiceVariaveisSistema;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -14,168 +13,46 @@ import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.util.Duration;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
+import static br.com.tlmacedo.cafeperfeito.service.ServiceVariaveisSistema.SPLASH_IMAGENS;
 import static br.com.tlmacedo.cafeperfeito.service.ServiceVariaveisSistema.TCONFIG;
 
-//import static br.com.tlmacedo.cafeperfeito.service.ServiceVariaveisSistema.SPLASH_IMAGENS;
-//import static br.com.tlmacedo.cafeperfeito.service.ServiceVariaveisSistema.TCONFIG;
+public class AlertMensagem implements Serializable {
 
-public class AlertMensagem {
+    private final long serialVersionUID = 1L;
+    private Thread thread;
+    private Dialog dialog = new Dialog();
+    private DialogPane dialogPane = dialog.getDialogPane();
+    private Task<?> task;
+    private String cabecalho = null, contentText = null, strIco = null;
 
-    private static Thread thread;
-    private static Dialog dialog = new Dialog();
-    private static DialogPane dialogPane = dialog.getDialogPane();
-    private static Task<?> task;
-    private static String cabecalho = null, contentText = null, strIco = null;
+    //    private boolean retornoWait = false;
+//    private boolean retornoProgressBar = false;
+    private boolean retornoValido = false;
+    private boolean waitReturn = false;
+    private HBox hBox = new HBox();
+    private VBox vBox = new VBox();
+    private ImageView imageView;
+    private List<Button> btns = new ArrayList<>();
+    private Button btnOk, btnCancel, btnYes, btnNo, btnApply, btnClose, btnFinish;
+    private Label lblMsg = new Label(), lblContagem = new Label();
+    private int timeOut = TCONFIG.getTimeOut();
+    private Timeline timeline;
+    private ProgressBar progressBar;
+    private ProgressIndicator progressIndicator;
+//    private List SPLASH_IMAGENS = TCONFIG.getPersonalizacao().getSplashImagens().getImage();
+//    private String PATH_STYLE_SHEETS = TCONFIG.getPaths().getPathStyleSheets();
 
-    private static boolean retornoWait = false;
-    private static boolean retornoProgressBar = false;
-    private static HBox hBox = new HBox();
-    private static VBox vBox = new VBox();
-    private static ImageView imageView;
-    private static List<Button> btns = new ArrayList<>();
-    private static Button btnOk, btnCancel, btnYes, btnNo, btnApply, btnClose, btnFinish;
-    private static Label lblMsg = new Label(), lblContagem = new Label();
-    private static int TIME_OUT = TCONFIG.getTimeOut();
-    private static Timeline timeline;
-    private static ProgressBar progressBar;
-    private static ProgressIndicator progressIndicator;
-    private static List SPLASH_IMAGENS = TCONFIG.getPersonalizacao().getSplashImagens().getImage();
-    private static String PATH_STYLE_SHEETS = TCONFIG.getPaths().getPathStyleSheets();
-
-    public Optional<ButtonType> alertYesNo() {
-        loadDialog();
-        loadDialogPane();
-
-        setBtnYes(new Button());
-        getBtns().add(getBtnYes());
-
-        setBtnNo(new Button());
-        getBtns().add(getBtnNo());
-
-        addButton();
-
-//        getDialog().setResultConverter(o -> {
-//            if (o == ButtonType.YES)
-//                return true;
-//            return false;
-//        });
-
-        return getDialog().showAndWait();
-    }
-
-
-    public Optional<ButtonType> alertYesNoCancel() {
-        loadDialog();
-        loadDialogPane();
-
-        setBtnYes(new Button());
-        getBtns().add(getBtnYes());
-
-        setBtnNo(new Button());
-        getBtns().add(getBtnNo());
-
-        setBtnCancel(new Button());
-        getBtns().add(getBtnCancel());
-
-        addButton();
-
-//        getDialog().setResultConverter(o -> {
-//            if (o == ButtonType.YES)
-//                return true;
-//            return false;
-//        });
-
-
-//        Optional<ButtonType> result = getDialog().showAndWait();
-//        if (result.get() == ButtonType.YES)
-//            return true;
-//        else if (result.get() == ButtonType.NO)
-//            return false;
-//        else
-//            return null;
-
-        return getDialog().showAndWait();
-    }
-
-    public static class AlertProgressBar {
-        public AlertProgressBar(Task<?> task, String titulo, boolean isWait) {
-            setCabecalho(titulo);
-            setTask(task);
-            setRetornoWait(isWait);
-
-            setTimeline(newTimeLine(0));
-
-            loadDialog();
-            loadDialogPane();
-            getDialogPane().getStyleClass().remove("alertMsg_return");
-            getDialogPane().getStyleClass().add("alertMsg_progress");
-
-
-            if (isWait) {
-                setBtnOk(new Button());
-                getBtns().add(getBtnOk());
-            }
-            setBtnCancel(new Button());
-            getBtns().add(getBtnCancel());
-
-            addButton();
-
-            getDialogPane().setContent(contentProgress(!isWait));
-
-            startContagemRegressiva();
-
-            getBtnCancel().setOnAction(actionEvent -> getTask().cancel());
-
-            getTask().setOnFailed(event -> {
-                setRetornoProgressBar(false);
-                dialogClose();
-            });
-
-            getTask().setOnCancelled(event -> {
-                setRetornoProgressBar(false);
-                dialogClose();
-            });
-
-            getTask().setOnSucceeded(event -> {
-                setRetornoProgressBar(true);
-                getTimeline().stop();
-                if (isWait) {
-                    getProgressBar().setProgress(100);
-                    addImage("/image/sis_logo_240dp.png");
-                    getBtnOk().setDisable(false);
-                } else {
-                    dialogClose();
-                }
-            });
-
-            getTimeline().setOnFinished(event -> {
-                setRetornoProgressBar(false);
-                dialogClose();
-                return;
-            });
-
-            setThread(new Thread(getTask()));
-            getThread().setDaemon(true);
-            getThread().start();
-
-            getDialog().showAndWait();
-
-        }
-
-        public boolean retorno() {
-            return isRetornoProgressBar();
-        }
-    }
 
     /**
      * Begin Returns
      */
 
-    private static VBox contentProgress(boolean loading) {
+    public VBox contentProgress(boolean loading) {
+        lblMsg.autosize();
         setProgressBar(new ProgressBar());
         getProgressBar().setProgress(ProgressBar.INDETERMINATE_PROGRESS);
         getProgressBar().prefWidthProperty().bind(getDialogPane().widthProperty().subtract(20));
@@ -205,7 +82,7 @@ public class AlertMensagem {
             getvBox().getChildren().add(gethBox());
         }
 
-        if (!isRetornoProgressBar()) {
+        if (!isRetornoValido()) {
             if (getTask().getTotalWork() > 1)
                 getProgressBar().progressProperty().bind(getTask().progressProperty());
         }
@@ -222,25 +99,25 @@ public class AlertMensagem {
      * Begin Voids
      */
 
-    public static void dialogClose() {
+    public void dialogClose() {
         getDialog().setResult(ButtonType.CANCEL);
         getDialog().close();
     }
 
-    public static void loadDialog() {
-        getDialogPane().getStylesheets().add(AlertMensagem.class.getResource(getPathStyleSheets()).toString());
+    public void loadDialog() {
+        getDialogPane().getStylesheets().add(getClass().getResource(TCONFIG.getPersonalizacao().getStyleSheets()).toString());
         getDialogPane().getButtonTypes().clear();
         getDialogPane().getStyleClass().add("alertMsg_return");
     }
 
-    public static void loadDialogPane() {
+    public void loadDialogPane() {
         getDialogPane().setHeaderText(getCabecalho());
         getDialogPane().setContentText(getContentText());
         if (getStrIco() != null)
             getDialog().setGraphic(new ImageView(AlertMensagem.class.getResource(getStrIco()).toString()));
     }
 
-    public static void addButton() {
+    public void addButton() {
         for (Button btn : getBtns()) {
             if (btn == getBtnOk()) {
                 getDialogPane().getButtonTypes().add(ButtonType.OK);
@@ -264,18 +141,18 @@ public class AlertMensagem {
         }
     }
 
-    public static void addImage(String pathImg) {
+    public void addImage(String pathImg) {
         if (getImageView() == null)
             setImageView(new ImageView());
         getImageView().setImage(new Image(AlertMensagem.class.getResource(pathImg).toString()));
     }
 
-    public static void startContagemRegressiva() {
+    public void startContagemRegressiva() {
         getTimeline().setCycleCount(getTimeOut() * 10);
         getTimeline().play();
     }
 
-    public static Timeline newTimeLine(int tempo) {
+    public Timeline newTimeLine(int tempo) {
         if (tempo > 0)
             setTimeOut(tempo);
         getLblMsg().textProperty().bind(getTask().messageProperty());
@@ -306,228 +183,229 @@ public class AlertMensagem {
      * Begin Getters and Setters
      */
 
-    public static Thread getThread() {
+    public Thread getThread() {
         return thread;
     }
 
-    public static void setThread(Thread thread) {
-        AlertMensagem.thread = thread;
+    public void setThread(Thread thread) {
+        this.thread = thread;
     }
 
-    public static Dialog getDialog() {
+    public Dialog getDialog() {
         return dialog;
     }
 
-    public static void setDialog(Dialog dialog) {
-        AlertMensagem.dialog = dialog;
+    public void setDialog(Dialog dialog) {
+        this.dialog = dialog;
     }
 
-    public static DialogPane getDialogPane() {
+    public DialogPane getDialogPane() {
         return dialogPane;
     }
 
-    public static void setDialogPane(DialogPane dialogPane) {
-        AlertMensagem.dialogPane = dialogPane;
+    public void setDialogPane(DialogPane dialogPane) {
+        this.dialogPane = dialogPane;
     }
 
-    public static Task<?> getTask() {
+    public Task<?> getTask() {
         return task;
     }
 
-    public static void setTask(Task<?> task) {
-        AlertMensagem.task = task;
+    public void setTask(Task<?> task) {
+        this.task = task;
     }
 
-    public static String getCabecalho() {
+    public String getCabecalho() {
         return cabecalho;
     }
 
-    public static void setCabecalho(String cabecalho) {
-        AlertMensagem.cabecalho = cabecalho;
+    public void setCabecalho(String cabecalho) {
+        this.cabecalho = cabecalho;
     }
 
-    public static String getContentText() {
+    public String getContentText() {
         return contentText;
     }
 
-    public static void setContentText(String contentText) {
-        AlertMensagem.contentText = contentText;
+    public void setContentText(String contentText) {
+        this.contentText = contentText;
     }
 
-    public static String getStrIco() {
+    public String getStrIco() {
         return strIco;
     }
 
-    public static void setStrIco(String strIco) {
-        AlertMensagem.strIco = strIco;
+    public void setStrIco(String strIco) {
+        this.strIco = strIco;
     }
 
-    public static boolean isRetornoWait() {
-        return retornoWait;
+//    public boolean isRetornoWait() {
+//        return retornoWait;
+//    }
+//
+//    public void setRetornoWait(boolean retornoWait) {
+//        this.retornoWait = retornoWait;
+//    }
+//
+//    public boolean isRetornoProgressBar() {
+//        return retornoProgressBar;
+//    }
+//
+//    public void setRetornoProgressBar(boolean retornoProgressBar) {
+//        this.retornoProgressBar = retornoProgressBar;
+//    }
+
+
+    public boolean isRetornoValido() {
+        return retornoValido;
     }
 
-    public static void setRetornoWait(boolean retornoWait) {
-        AlertMensagem.retornoWait = retornoWait;
+    public void setRetornoValido(boolean retornoValido) {
+        this.retornoValido = retornoValido;
     }
 
-    public static boolean isRetornoProgressBar() {
-        return retornoProgressBar;
+    public boolean isWaitReturn() {
+        return waitReturn;
     }
 
-    public static void setRetornoProgressBar(boolean retornoProgressBar) {
-        AlertMensagem.retornoProgressBar = retornoProgressBar;
+    public void setWaitReturn(boolean waitReturn) {
+        this.waitReturn = waitReturn;
     }
 
-    public static HBox gethBox() {
+    public HBox gethBox() {
         return hBox;
     }
 
-    public static void sethBox(HBox hBox) {
-        AlertMensagem.hBox = hBox;
+    public void sethBox(HBox hBox) {
+        this.hBox = hBox;
     }
 
-    public static VBox getvBox() {
+    public VBox getvBox() {
         return vBox;
     }
 
-    public static void setvBox(VBox vBox) {
-        AlertMensagem.vBox = vBox;
+    public void setvBox(VBox vBox) {
+        this.vBox = vBox;
     }
 
-    public static ImageView getImageView() {
+    public ImageView getImageView() {
         return imageView;
     }
 
-    public static void setImageView(ImageView imageView) {
-        AlertMensagem.imageView = imageView;
+    public void setImageView(ImageView imageView) {
+        this.imageView = imageView;
     }
 
-    public static List<Button> getBtns() {
+    public List<Button> getBtns() {
         return btns;
     }
 
-    public static void setBtns(List<Button> btns) {
-        AlertMensagem.btns = btns;
+    public void setBtns(List<Button> btns) {
+        this.btns = btns;
     }
 
-    public static Button getBtnOk() {
+    public Button getBtnOk() {
         return btnOk;
     }
 
-    public static void setBtnOk(Button btnOk) {
-        AlertMensagem.btnOk = btnOk;
+    public void setBtnOk(Button btnOk) {
+        this.btnOk = btnOk;
     }
 
-    public static Button getBtnCancel() {
+    public Button getBtnCancel() {
         return btnCancel;
     }
 
-    public static void setBtnCancel(Button btnCancel) {
-        AlertMensagem.btnCancel = btnCancel;
+    public void setBtnCancel(Button btnCancel) {
+        this.btnCancel = btnCancel;
     }
 
-    public static Button getBtnYes() {
+    public Button getBtnYes() {
         return btnYes;
     }
 
-    public static void setBtnYes(Button btnYes) {
-        AlertMensagem.btnYes = btnYes;
+    public void setBtnYes(Button btnYes) {
+        this.btnYes = btnYes;
     }
 
-    public static Button getBtnNo() {
+    public Button getBtnNo() {
         return btnNo;
     }
 
-    public static void setBtnNo(Button btnNo) {
-        AlertMensagem.btnNo = btnNo;
+    public void setBtnNo(Button btnNo) {
+        this.btnNo = btnNo;
     }
 
-    public static Button getBtnApply() {
+    public Button getBtnApply() {
         return btnApply;
     }
 
-    public static void setBtnApply(Button btnApply) {
-        AlertMensagem.btnApply = btnApply;
+    public void setBtnApply(Button btnApply) {
+        this.btnApply = btnApply;
     }
 
-    public static Button getBtnClose() {
+    public Button getBtnClose() {
         return btnClose;
     }
 
-    public static void setBtnClose(Button btnClose) {
-        AlertMensagem.btnClose = btnClose;
+    public void setBtnClose(Button btnClose) {
+        this.btnClose = btnClose;
     }
 
-    public static Button getBtnFinish() {
+    public Button getBtnFinish() {
         return btnFinish;
     }
 
-    public static void setBtnFinish(Button btnFinish) {
-        AlertMensagem.btnFinish = btnFinish;
+    public void setBtnFinish(Button btnFinish) {
+        this.btnFinish = btnFinish;
     }
 
-    public static Label getLblMsg() {
+    public Label getLblMsg() {
         return lblMsg;
     }
 
-    public static void setLblMsg(Label lblMsg) {
-        AlertMensagem.lblMsg = lblMsg;
+    public void setLblMsg(Label lblMsg) {
+        this.lblMsg = lblMsg;
     }
 
-    public static Label getLblContagem() {
+    public Label getLblContagem() {
         return lblContagem;
     }
 
-    public static void setLblContagem(Label lblContagem) {
-        AlertMensagem.lblContagem = lblContagem;
+    public void setLblContagem(Label lblContagem) {
+        this.lblContagem = lblContagem;
     }
 
-    public static int getTimeOut() {
-        return TIME_OUT;
+    public int getTimeOut() {
+        return timeOut;
     }
 
-    public static void setTimeOut(int timeOut) {
-        TIME_OUT = timeOut;
+    public void setTimeOut(int timeOut) {
+        this.timeOut = timeOut;
     }
 
-    public static Timeline getTimeline() {
+    public Timeline getTimeline() {
         return timeline;
     }
 
-    public static void setTimeline(Timeline timeline) {
-        AlertMensagem.timeline = timeline;
+    public void setTimeline(Timeline timeline) {
+        this.timeline = timeline;
     }
 
-    public static ProgressBar getProgressBar() {
+    public ProgressBar getProgressBar() {
         return progressBar;
     }
 
-    public static void setProgressBar(ProgressBar progressBar) {
-        AlertMensagem.progressBar = progressBar;
+    public void setProgressBar(ProgressBar progressBar) {
+        this.progressBar = progressBar;
     }
 
-    public static ProgressIndicator getProgressIndicator() {
+    public ProgressIndicator getProgressIndicator() {
         return progressIndicator;
     }
 
-    public static void setProgressIndicator(ProgressIndicator progressIndicator) {
-        AlertMensagem.progressIndicator = progressIndicator;
-    }
-
-    public static List getSplashImagens() {
-        return SPLASH_IMAGENS;
-    }
-
-    public static void setSplashImagens(List splashImagens) {
-        SPLASH_IMAGENS = splashImagens;
-    }
-
-    public static String getPathStyleSheets() {
-        return PATH_STYLE_SHEETS;
-    }
-
-    public static void setPathStyleSheets(String pathStyleSheets) {
-        PATH_STYLE_SHEETS = pathStyleSheets;
+    public void setProgressIndicator(ProgressIndicator progressIndicator) {
+        this.progressIndicator = progressIndicator;
     }
 
     /**

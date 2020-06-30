@@ -9,14 +9,13 @@ import br.com.tlmacedo.cafeperfeito.model.vo.SaidaProdutoNfe;
 import br.com.tlmacedo.cafeperfeito.service.ServiceMascara;
 import br.com.tlmacedo.cafeperfeito.service.ServiceSegundoPlano;
 import br.com.tlmacedo.cafeperfeito.service.ServiceValidarDado;
-import br.com.tlmacedo.cafeperfeito.service.ServiceVariaveisSistema;
+import br.com.tlmacedo.cafeperfeito.service.alert.Alert_Ok;
+import br.com.tlmacedo.cafeperfeito.service.alert.Alert_YesNo;
 import br.com.tlmacedo.nfe.service.ExceptionNFe;
 import br.com.tlmacedo.nfe.service.NFev400;
-import br.com.tlmacedo.service.ServiceAlertMensagem;
 import javafx.scene.control.ButtonType;
 
 import javax.sql.rowset.serial.SerialBlob;
-import java.io.FileNotFoundException;
 import java.math.BigDecimal;
 
 import static br.com.tlmacedo.cafeperfeito.interfaces.Regex_Convert.DTF_DATA;
@@ -29,11 +28,6 @@ public class Nfe {
     private NFev400 nFev400;
     private SaidaProdutoNfe saidaProdutoNfe;
     private String xml;
-    private static ServiceAlertMensagem ALERT_MENSAGEM =
-            new ServiceAlertMensagem(TCONFIG.getTimeOut(),
-                    ServiceVariaveisSistema.SPLASH_IMAGENS,
-                    TCONFIG.getPersonalizacao().getStyleSheets());
-
 
     private boolean errCertificado() {
         boolean err = true, repete = false;
@@ -41,23 +35,23 @@ public class Nfe {
             try {
                 err = getnFev400().errNoCertificado();
             } catch (Exception e) {
-                ALERT_MENSAGEM.setCabecalho("Certificado digital");
-                ALERT_MENSAGEM.setContentText("erro no certificado, deseja tentar novamente?");
-                if (ALERT_MENSAGEM.alertYesNo().get() == ButtonType.YES) {
+                if (new Alert_YesNo("Certificado digital",
+                        "erro no certificado, deseja tentar novamente?",
+                        null)
+                        .retorno().get() == ButtonType.YES)
                     repete = true;
-                } else {
+                else
                     repete = false;
-                }
             }
         } while (err && repete);
-        if (err && repete == false) {
-            ALERT_MENSAGEM.setContentText("Operação cancelada pelo usuário!");
-            ALERT_MENSAGEM.alertOk();
-        }
+        if (err && repete == false)
+            new Alert_Ok("Erro", "Operação cancelada pelo usuário!", null);
+
         return (err);
+
     }
 
-    public Nfe(SaidaProdutoNfe saidaProdutoNfe, boolean imprimeLote) throws ExceptionNFe, FileNotFoundException {
+    public Nfe(SaidaProdutoNfe saidaProdutoNfe, boolean imprimeLote) throws Exception {
         setSaidaProdutoNfe(saidaProdutoNfe);
 
         setnFev400(new NFev400(null,

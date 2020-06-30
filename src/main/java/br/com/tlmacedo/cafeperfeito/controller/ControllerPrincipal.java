@@ -22,7 +22,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
-import java.io.FileNotFoundException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -126,7 +125,7 @@ public class ControllerPrincipal implements Initializable, ModeloCafePerfeito {
                     }
                     try {
                         new Nfe(saidaProdutoNfe, true);
-                    } catch (FileNotFoundException e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 });

@@ -7,10 +7,10 @@ import br.com.tlmacedo.cafeperfeito.model.tm.TmodelEntradaProduto;
 import br.com.tlmacedo.cafeperfeito.model.tm.TmodelProduto;
 import br.com.tlmacedo.cafeperfeito.model.vo.*;
 import br.com.tlmacedo.cafeperfeito.service.*;
+import br.com.tlmacedo.cafeperfeito.service.alert.Alert_Ok;
 import br.com.tlmacedo.cafeperfeito.service.autoComplete.ServiceAutoCompleteComboBox;
 import br.com.tlmacedo.cafeperfeito.service.format.ServiceFormatDataPicker;
 import br.com.tlmacedo.cafeperfeito.view.ViewEntradaProduto;
-import br.com.tlmacedo.service.ServiceAlertMensagem;
 import br.inf.portalfiscal.xsd.cte.procCTe_v300.CteProc;
 import br.inf.portalfiscal.xsd.cte.procCTe_v300.TCTe;
 import br.inf.portalfiscal.xsd.nfe.procNFe.TNfeProc;
@@ -50,7 +50,6 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static br.com.tlmacedo.cafeperfeito.interfaces.Regex_Convert.DTF_NFE_TO_LOCAL_DATE;
-import static br.com.tlmacedo.cafeperfeito.service.ServiceVariaveisSistema.TCONFIG;
 
 /**
  * Created by IntelliJ IDEA.
@@ -147,7 +146,6 @@ public class ControllerEntradaProduto implements Initializable, ModeloCafePerfei
     private String nomeController = "entradaProduto";
     private ObjectProperty<StatusBarEntradaProduto> statusBar = new SimpleObjectProperty<>(StatusBarEntradaProduto.DIGITACAO);
     private EventHandler eventHandlerEntradaProduto;
-    private ServiceAlertMensagem alertMensagem;
 
     private TmodelProduto tmodelProduto;
     private FilteredList<Produto> produtoFilteredList;
@@ -263,15 +261,9 @@ public class ControllerEntradaProduto implements Initializable, ModeloCafePerfei
                                     limpaCampos(getPainelViewEntradaProduto());
                                 }
                             } else {
-                                setAlertMensagem(new ServiceAlertMensagem(
-                                        TCONFIG.getTimeOut(),
-                                        ServiceVariaveisSistema.SPLASH_IMAGENS,
-                                        TCONFIG.getPersonalizacao().getStyleSheets()
-                                ));
-                                getAlertMensagem().setCabecalho("Entrada invalida");
-                                getAlertMensagem().setContentText("Verifique a entrada de produtos pois está invalida");
-                                getAlertMensagem().setStrIco("");
-                                getAlertMensagem().alertOk();
+                                new Alert_Ok("Entrada invalida",
+                                        "Verifique a entrada de produtos pois está invalida",
+                                        null);
                             }
                             break;
                         case F5:
@@ -1773,14 +1765,6 @@ public class ControllerEntradaProduto implements Initializable, ModeloCafePerfei
 
     public void setEventHandlerEntradaProduto(EventHandler eventHandlerEntradaProduto) {
         this.eventHandlerEntradaProduto = eventHandlerEntradaProduto;
-    }
-
-    public ServiceAlertMensagem getAlertMensagem() {
-        return alertMensagem;
-    }
-
-    public void setAlertMensagem(ServiceAlertMensagem alertMensagem) {
-        this.alertMensagem = alertMensagem;
     }
 
     public TmodelProduto getTmodelProduto() {

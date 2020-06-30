@@ -9,13 +9,14 @@ import br.com.tlmacedo.cafeperfeito.model.tm.TmodelSaidaProduto;
 import br.com.tlmacedo.cafeperfeito.model.vo.*;
 import br.com.tlmacedo.cafeperfeito.nfe.Nfe;
 import br.com.tlmacedo.cafeperfeito.service.*;
+import br.com.tlmacedo.cafeperfeito.service.alert.Alert_Ok;
+import br.com.tlmacedo.cafeperfeito.service.alert.Alert_YesNoCancel;
 import br.com.tlmacedo.cafeperfeito.service.autoComplete.ServiceAutoCompleteComboBox;
 import br.com.tlmacedo.cafeperfeito.service.format.FormatDataPicker;
 import br.com.tlmacedo.cafeperfeito.service.format.ServiceFormatDataPicker;
 import br.com.tlmacedo.cafeperfeito.view.ViewRecebimento;
 import br.com.tlmacedo.cafeperfeito.view.ViewSaidaProduto;
 import br.com.tlmacedo.nfe.service.NFev400;
-import br.com.tlmacedo.service.ServiceAlertMensagem;
 import br.inf.portalfiscal.xsd.nfe.enviNFe.TEnviNFe;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
@@ -43,7 +44,6 @@ import java.util.stream.Collectors;
 
 import static br.com.tlmacedo.cafeperfeito.interfaces.Regex_Convert.DTF_DATA;
 import static br.com.tlmacedo.cafeperfeito.service.ServiceVariaveisNFe.MYINFNFE;
-import static br.com.tlmacedo.cafeperfeito.service.ServiceVariaveisSistema.TCONFIG;
 import static java.time.temporal.ChronoUnit.DAYS;
 
 public class ControllerSaidaProduto implements Initializable, ModeloCafePerfeito {
@@ -133,7 +133,6 @@ public class ControllerSaidaProduto implements Initializable, ModeloCafePerfeito
     private String nomeController = "saidaProduto";
     private ObjectProperty<StatusBarSaidaProduto> statusBar = new SimpleObjectProperty<>(StatusBarSaidaProduto.DIGITACAO);
     private EventHandler eventHandlerSaidaProduto;
-    private ServiceAlertMensagem alertMensagem;
 
     private TmodelProduto tmodelProduto;
     private FilteredList<Produto> produtoFilteredList;
@@ -335,15 +334,9 @@ public class ControllerSaidaProduto implements Initializable, ModeloCafePerfeito
                                     getSaidaProdutoDAO().transactionRollback();
                                 }
                             } else {
-                                setAlertMensagem(new ServiceAlertMensagem(
-                                        TCONFIG.getTimeOut(),
-                                        ServiceVariaveisSistema.SPLASH_IMAGENS,
-                                        TCONFIG.getPersonalizacao().getStyleSheets()
-                                ));
-                                getAlertMensagem().setCabecalho("Saida invalida");
-                                getAlertMensagem().setContentText("Verifique a saida de produtos pois está invalida");
-                                getAlertMensagem().setStrIco("");
-                                getAlertMensagem().alertOk();
+                                new Alert_Ok("Saida invalida",
+                                        "Verifique a saida de produtos pois está invalida",
+                                        null);
                             }
                             break;
                         case F6:
@@ -1147,28 +1140,24 @@ public class ControllerSaidaProduto implements Initializable, ModeloCafePerfeito
         return true;
     }
 
-    private boolean gerarDanfe() {
-        boolean retorno = false;
-        try {
-            getEnumsTasksList().clear();
-            getEnumsTasksList().add(EnumsTasks.NFE_GERAR);
-            getEnumsTasksList().add(EnumsTasks.NFE_ASSINAR);
-            getEnumsTasksList().add(EnumsTasks.NFE_TRANSMITIR);
-            getEnumsTasksList().add(EnumsTasks.NFE_RETORNO);
-            getEnumsTasksList().add(EnumsTasks.RELATORIO_IMPRIME_NFE);
-            setAlertMensagem(new ServiceAlertMensagem(
-                    TCONFIG.getTimeOut(),
-                    ServiceVariaveisSistema.SPLASH_IMAGENS,
-                    TCONFIG.getPersonalizacao().getStyleSheets()
-            ));
-            getAlertMensagem().setCabecalho("Retorno inválido");
-            getAlertMensagem().setContentText("alguma coisa de errado aconteceu com a nota!!!");
-            retorno = new ServiceSegundoPlano().executaListaTarefas(newTaskSaidaProduto(), String.format("Gerando NFe [%d]!", Integer.valueOf(getTxtNfeDadosNumero().getText())));
-            getAlertMensagem().alertOk();
-        } catch (Exception ex) {
-            ex.printStackTrace();
+    private boolean gerarDanfe() throws Exception {
+        getEnumsTasksList().clear();
+        getEnumsTasksList().add(EnumsTasks.NFE_GERAR);
+        getEnumsTasksList().add(EnumsTasks.NFE_ASSINAR);
+        getEnumsTasksList().add(EnumsTasks.NFE_TRANSMITIR);
+        getEnumsTasksList().add(EnumsTasks.NFE_RETORNO);
+        getEnumsTasksList().add(EnumsTasks.RELATORIO_IMPRIME_NFE);
+        if (new ServiceSegundoPlano().executaListaTarefas(newTaskSaidaProduto(), String.format("Gerando NFe [%d]!", Integer.valueOf(getTxtNfeDadosNumero().getText())))) {
+            new Alert_Ok("Sucesso NFe",
+                    "NFe foi gerada com sucesso!!!",
+                    null);
+            return true;
         }
-        return retorno;
+        new Alert_Ok("Retorno inválido",
+                "alguma coisa de errado aconteceu com a nota!!!",
+                null);
+        return false;
+
     }
 
     private String refreshNFeInfAdicionas() {
@@ -1203,28 +1192,19 @@ public class ControllerSaidaProduto implements Initializable, ModeloCafePerfeito
         BigDecimal vlrCredDeb = ServiceMascara.getBigDecimalFromTextField(getLblLimiteUtilizado().getText(), 2);
 
         if (vlrCredDeb.compareTo(BigDecimal.ZERO) != 0) {
+            String strCabecalho = null, strContextText = null, strIcone = null;
             if (vlrCredDeb.compareTo(BigDecimal.ZERO) < 0) {
-                setAlertMensagem(new ServiceAlertMensagem(
-                        TCONFIG.getTimeOut(),
-                        ServiceVariaveisSistema.SPLASH_IMAGENS,
-                        TCONFIG.getPersonalizacao().getStyleSheets()
-                ));
-                getAlertMensagem().setCabecalho("Crédito disponível");
-                getAlertMensagem().setContentText(String.format("o cliente tem um crédito de R$ %s\ndeseja utilizar esse valor para abater no pedido?",
-                        ServiceMascara.getMoeda((vlrCredDeb.multiply(new BigDecimal("-1."))), 2)));
-                getAlertMensagem().setStrIco("");
+                strCabecalho = "Crédito disponível";
+                strContextText = String.format("o cliente tem um crédito de R$ %s\ndeseja utilizar esse valor para abater no pedido?",
+                        ServiceMascara.getMoeda((vlrCredDeb.multiply(new BigDecimal("-1."))), 2));
+                strIcone = null;
             } else if (vlrCredDeb.compareTo(BigDecimal.ZERO) > 0) {
-                setAlertMensagem(new ServiceAlertMensagem(
-                        TCONFIG.getTimeOut(),
-                        ServiceVariaveisSistema.SPLASH_IMAGENS,
-                        TCONFIG.getPersonalizacao().getStyleSheets()
-                ));
-                getAlertMensagem().setCabecalho("Débito detectado");
-                getAlertMensagem().setContentText(String.format("o cliente tem um dédito de R$ %s\ndeseja acrescentar esse valor no pedido atual?",
-                        ServiceMascara.getMoeda((vlrCredDeb.multiply(new BigDecimal("-1."))), 2)));
-                getAlertMensagem().setStrIco("");
+                strCabecalho = "Débito detectado";
+                strContextText = String.format("o cliente tem um dédito de R$ %s\ndeseja acrescentar esse valor no pedido atual?",
+                        ServiceMascara.getMoeda((vlrCredDeb.multiply(new BigDecimal("-1."))), 2));
+                strIcone = null;
             }
-            if (getAlertMensagem().alertYesNoCancel().get() == ButtonType.CANCEL)
+            if (new Alert_YesNoCancel(strCabecalho, strContextText, strIcone).retorno().get() == ButtonType.CANCEL)
                 return BigDecimal.ZERO;
         }
         return vlrCredDeb;
@@ -1833,14 +1813,6 @@ public class ControllerSaidaProduto implements Initializable, ModeloCafePerfeito
 
     public void setEventHandlerSaidaProduto(EventHandler eventHandlerSaidaProduto) {
         this.eventHandlerSaidaProduto = eventHandlerSaidaProduto;
-    }
-
-    public ServiceAlertMensagem getAlertMensagem() {
-        return alertMensagem;
-    }
-
-    public void setAlertMensagem(ServiceAlertMensagem alertMensagem) {
-        this.alertMensagem = alertMensagem;
     }
 
     public TmodelProduto getTmodelProduto() {

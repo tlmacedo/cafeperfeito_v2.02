@@ -1,6 +1,5 @@
 package br.com.tlmacedo.cafeperfeito.model.vo;
 
-import br.com.tlmacedo.service.ServiceAlertMensagem;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import javafx.beans.property.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -34,8 +33,6 @@ public class ProdutoEstoque implements Serializable {
 
     private StringProperty docEntrada = new SimpleStringProperty();
     private StringProperty docEntradaChaveNFe = new SimpleStringProperty();
-
-    private ServiceAlertMensagem alertMensagem;
 
     public ProdutoEstoque() {
     }
@@ -271,15 +268,6 @@ public class ProdutoEstoque implements Serializable {
 
     public void setDocEntradaChaveNFe(String docEntradaChaveNFe) {
         this.docEntradaChaveNFe.set(docEntradaChaveNFe);
-    }
-
-    @Transient
-    public ServiceAlertMensagem getAlertMensagem() {
-        return alertMensagem;
-    }
-
-    public void setAlertMensagem(ServiceAlertMensagem alertMensagem) {
-        this.alertMensagem = alertMensagem;
     }
 
     @Override

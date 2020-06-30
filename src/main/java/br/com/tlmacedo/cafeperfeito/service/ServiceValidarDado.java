@@ -5,8 +5,8 @@ import br.com.tlmacedo.cafeperfeito.model.dao.RecebimentoDAO;
 import br.com.tlmacedo.cafeperfeito.model.vo.Recebimento;
 import br.com.tlmacedo.cafeperfeito.model.vo.SaidaProdutoNfe;
 import br.com.tlmacedo.cafeperfeito.model.vo.UsuarioLogado;
+import br.com.tlmacedo.cafeperfeito.service.alert.Alert_Ok;
 import br.com.tlmacedo.nfe.model.vo.IdeVO;
-import br.com.tlmacedo.service.ServiceAlertMensagem;
 import org.apache.commons.lang3.StringUtils;
 
 import java.time.LocalDate;
@@ -216,20 +216,14 @@ public class ServiceValidarDado {
         m = p.matcher(value.replaceAll("\\D", ""));
         if (m.find())
             return true;
-        if (getMsgFaill) {
-            ServiceAlertMensagem alertMensagem = new ServiceAlertMensagem(
-                    TCONFIG.getTimeOut(),
-                    ServiceVariaveisSistema.SPLASH_IMAGENS,
-                    TCONFIG.getPersonalizacao().getStyleSheets()
-            );
-            alertMensagem.setCabecalho("Dados inválidos");
-            alertMensagem.setStrIco("ic_msg_alerta_triangulo_white_24dp.png");
-            alertMensagem.setContentText(String.format("%s, telefone informado: [%s], é inválido!",
-                    StringUtils.capitalize(UsuarioLogado.getUsuario().getApelido()),
-                    value));
-            alertMensagem.alertOk();
-        }
+        if (getMsgFaill)
+            new Alert_Ok("Dados inválidos",
+                    String.format("%s, telefone informado: [%s], é inválido!",
+                            StringUtils.capitalize(UsuarioLogado.getUsuario().getApelido()),
+                            value),
+                    "ic_msg_alerta_triangulo_white_24dp.png");
         return false;
+
     }
 
     public static List<String> getTelefoneList(final String value) {

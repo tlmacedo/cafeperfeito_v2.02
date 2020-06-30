@@ -11,7 +11,6 @@ import br.com.tlmacedo.cafeperfeito.model.vo.Recebimento;
 import br.com.tlmacedo.cafeperfeito.model.vo.UsuarioLogado;
 import br.com.tlmacedo.cafeperfeito.service.*;
 import br.com.tlmacedo.cafeperfeito.view.ViewRecebimento;
-import br.com.tlmacedo.service.ServiceAlertMensagem;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
@@ -55,7 +54,6 @@ public class ControllerRecebimento implements Initializable, ModeloCafePerfeito 
     private List<EnumsTasks> enumsTasksList = new ArrayList<>();
 
     private String nomeController = "recebimento";
-    private ServiceAlertMensagem alertMensagem;
 
     private ObjectProperty<Recebimento> recebimento = new SimpleObjectProperty<>();
     private ObjectProperty<Object> object = ViewRecebimento.objectProperty();
@@ -431,14 +429,6 @@ public class ControllerRecebimento implements Initializable, ModeloCafePerfeito 
 
     public void setNomeController(String nomeController) {
         this.nomeController = nomeController;
-    }
-
-    public ServiceAlertMensagem getAlertMensagem() {
-        return alertMensagem;
-    }
-
-    public void setAlertMensagem(ServiceAlertMensagem alertMensagem) {
-        this.alertMensagem = alertMensagem;
     }
 
     public Recebimento getRecebimento() {
