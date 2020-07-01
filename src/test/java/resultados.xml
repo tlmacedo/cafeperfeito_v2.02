@@ -1,23 +1,24 @@
-<enviNFe xmlns="http://www.portalfiscal.inf.br/nfe" versao="4.00">
+<?xml version="1.0" encoding="UTF-8"?>
+<enviNFe versao="4.00" xmlns="http://www.portalfiscal.inf.br/nfe">
     <idLote>000000000000085</idLote>
     <indSinc>0</indSinc>
     <NFe>
-        <infNFe Id="NFe13200608009246000136550010000006071202020064" versao="4.00">
+        <infNFe versao="4.00" Id="NFe13200608009246000136550010000006161202020063">
             <ide>
                 <cUF>13</cUF>
                 <cNF>20202006</cNF>
                 <natOp>VENDA Dentro Do Estado</natOp>
                 <mod>55</mod>
                 <serie>1</serie>
-                <nNF>607</nNF>
-                <dhEmi>2020-06-19T00:00:00-04:00</dhEmi>
-                <dhSaiEnt>2020-06-19T00:00:00-04:00</dhSaiEnt>
+                <nNF>616</nNF>
+                <dhEmi>2020-06-30T00:00:00-04:00</dhEmi>
+                <dhSaiEnt>2020-06-30T00:00:00-04:00</dhSaiEnt>
                 <tpNF>1</tpNF>
                 <idDest>1</idDest>
                 <cMunFG>1302603</cMunFG>
                 <tpImp>1</tpImp>
                 <tpEmis>1</tpEmis>
-                <cDV>4</cDV>
+                <cDV>3</cDV>
                 <tpAmb>2</tpAmb>
                 <finNFe>1</finNFe>
                 <indFinal>1</indFinal>
@@ -357,7 +358,7 @@
             </transp>
             <cobr>
                 <fat>
-                    <nFat>607</nFat>
+                    <nFat>616</nFat>
                     <vOrig>3370.60</vOrig>
                     <vDesc>180.00</vDesc>
                     <vLiq>3190.60</vLiq>
@@ -382,66 +383,5 @@
                 <fone>92981686148</fone>
             </infRespTec>
         </infNFe>
-        <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
-            <SignedInfo>
-                <CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
-                <SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
-                <Reference URI="#NFe13200608009246000136550010000006071202020064">
-                    <Transforms>
-                        <Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
-                        <Transform Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
-                    </Transforms>
-                    <DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
-                    <DigestValue>XAX00nB9md8gt04HH60qpH+U6Fg=</DigestValue>
-                </Reference>
-            </SignedInfo>
-            <SignatureValue>YimZzLlm/dFcjTlpoAUq/ZWXl0te3rD90vdZNbxS6ONflXGFRXk4T7V8+EdM9hLHlgrzM8ZE/ZQU&#13;
-                qJ1in4KIGZx+FVHWsPgxaAwIrdF+KYytwN3fq7CpOBpGeMJrCFPqqhnUXF6v3leb8Ne0GP8vCh+o&#13;
-                fZs79+TChZqQw95boPxtZ0PWqJXANJXXb8krbX9pkXYNpH2kmU6+BITO930cWRl2VsxdXDJ7FMxg&#13;
-                zLyd5pAmSKgaZUZtUE1prwduJtNolnWPW6PArzXGvFcvvTCT9uThTHVfuXEDYdYP4FzP4Q6aeeVX&#13;
-                a8YXox7/ZCluGB8m8WHvZlWkspQRv/dMwoJ6tw==
-            </SignatureValue>
-            <KeyInfo>
-                <X509Data>
-                    <X509Certificate>MIIH9jCCBd6gAwIBAgIILOIUUKlZVGEwDQYJKoZIhvcNAQELBQAwdTELMAkGA1UEBhMCQlIxEzAR&#13;
-                        BgNVBAoMCklDUC1CcmFzaWwxNjA0BgNVBAsMLVNlY3JldGFyaWEgZGEgUmVjZWl0YSBGZWRlcmFs&#13;
-                        IGRvIEJyYXNpbCAtIFJGQjEZMBcGA1UEAwwQQUMgU0VSQVNBIFJGQiB2NTAeFw0yMDA0MTYyMTAw&#13;
-                        MDBaFw0yMzA0MTYyMTAwMDBaMIIBGjELMAkGA1UEBhMCQlIxCzAJBgNVBAgMAkFNMQ8wDQYDVQQH&#13;
-                        DAZNQU5BVVMxEzARBgNVBAoMCklDUC1CcmFzaWwxGDAWBgNVBAsMDzAwMDAwMTAwOTU4MDgzMzE2&#13;
-                        MDQGA1UECwwtU2VjcmV0YXJpYSBkYSBSZWNlaXRhIEZlZGVyYWwgZG8gQnJhc2lsIC0gUkZCMRYw&#13;
-                        FAYDVQQLDA1SRkIgZS1DTlBKIEEzMRkwFwYDVQQLDBBBQyBTRVJBU0EgUkZCIHY1MRcwFQYDVQQL&#13;
-                        DA4wMTE0Njk1NzAwMDEwMzEWMBQGA1UECwwNQVIgVFJFVk9DSEVDSzEiMCAGA1UEAwwZVCBMIE1B&#13;
-                        Q0VETzowODAwOTI0NjAwMDEzNjCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBALs8aZPR&#13;
-                        eSRXREv9KovxzTwyttErAiPsgOYV6XG4ZpgsywK8HB15C8L2aw8X1LY5bx9xqMMCFWIxsjos5yJa&#13;
-                        LlHrb5Urcr2+WHZ3gRLno2AbfGv6nRVyXCnuZaVwb3yCH70xDPyNsYnd/PcW4X7Bb6rqZ+kKj142&#13;
-                        0A2PrHuynmvftPz8mHoLxhHCp0mJsQ4X8lMJTD57F3XUWgJDAwgxPSXNyUjq9d2fwigm46KU9Fdm&#13;
-                        4TbysDrHiC5CybfAKEHewxQWKDyN1BBKCpwP41ooRC9rw/BemOwEIgvpUwTRX1LPBgb+bII9K0sC&#13;
-                        7PH/4is6KlgHh4+bGDKMLpcOXaN4WcsCAwEAAaOCAuEwggLdMAkGA1UdEwQCMAAwHwYDVR0jBBgw&#13;
-                        FoAU7PFBUVeo5jrpXrOgIvkIirU6h48wgZkGCCsGAQUFBwEBBIGMMIGJMEgGCCsGAQUFBzAChjxo&#13;
-                        dHRwOi8vd3d3LmNlcnRpZmljYWRvZGlnaXRhbC5jb20uYnIvY2FkZWlhcy9zZXJhc2FyZmJ2NS5w&#13;
-                        N2IwPQYIKwYBBQUHMAGGMWh0dHA6Ly9vY3NwLmNlcnRpZmljYWRvZGlnaXRhbC5jb20uYnIvc2Vy&#13;
-                        YXNhcmZidjUwgbEGA1UdEQSBqTCBpoEVVEwuTUFDRURPQEhPVE1BSUwuQ09NoB8GBWBMAQMCoBYT&#13;
-                        FFRISUFHTyBMRUlST1MgTUFDRURPoBkGBWBMAQMDoBATDjA4MDA5MjQ2MDAwMTM2oDgGBWBMAQME&#13;
-                        oC8TLTAyMDQxOTgxNTIzMDk1NTAyMzAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMKAXBgVgTAED&#13;
-                        B6AOEwwwMDAwMDAwMDAwMDAwcQYDVR0gBGowaDBmBgZgTAECAwowXDBaBggrBgEFBQcCARZOaHR0&#13;
-                        cDovL3B1YmxpY2FjYW8uY2VydGlmaWNhZG9kaWdpdGFsLmNvbS5ici9yZXBvc2l0b3Jpby9kcGMv&#13;
-                        ZGVjbGFyYWNhby1yZmIucGRmMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEFBQcDBDCBnQYDVR0f&#13;
-                        BIGVMIGSMEqgSKBGhkRodHRwOi8vd3d3LmNlcnRpZmljYWRvZGlnaXRhbC5jb20uYnIvcmVwb3Np&#13;
-                        dG9yaW8vbGNyL3NlcmFzYXJmYnY1LmNybDBEoEKgQIY+aHR0cDovL2xjci5jZXJ0aWZpY2Fkb3Mu&#13;
-                        Y29tLmJyL3JlcG9zaXRvcmlvL2xjci9zZXJhc2FyZmJ2NS5jcmwwHQYDVR0OBBYEFIIEYDiE2ogr&#13;
-                        cC/XQd28cccn4ugOMA4GA1UdDwEB/wQEAwIF4DANBgkqhkiG9w0BAQsFAAOCAgEAghuyfpNLTb4H&#13;
-                        tTSUjB5XyCNWlEwk8oDrBrm0QFVxpL7ekuCPYaltYkk2nap07RzyrIW+8ygL4P9P/9T4eX+pST6G&#13;
-                        OS6EwrQN0IXRS8a05h60sbKEg0Yo0amFY7e/+4g8MfThUGiqlvif5XSOC0x/lQLZdiMDC1N9tqDP&#13;
-                        zvfheW4MUtH7YnRNCbnKAP6kKHwiwzYoH0ZaoFUPoY/MEjE6xiJHahN6py79TSLSW3hXZq3zzWSs&#13;
-                        tdLnm1zAVKmZLUsx6tM3dFnWz52f2V56j9par07uDqQBolebUZOFOgAJCiOCmuUjviDROnItkv5r&#13;
-                        MfpZtaMVuKx2o2ay5wl6ebkXO4SmrIAmA4UuBrvY14lEBx2u9zX0IJddfddKHzN8GybHMcrJR601&#13;
-                        tbMFFPusphX8Gj/ClnU94P0bvi8u4daJKQApZQr6lnwKZ3TWuNwpCPx6JhP+7BfSmbZEwDgiIYas&#13;
-                        Wpe2d4HHhinzrIYEAgkcDJ72C6SJWDr7c8vBiXVxXVdmqykuMVg+8ANlsFnrd9MVxa65rY9Giwdy&#13;
-                        6zcOBffaHLHcLR2nyCqkC6O8t2ZsKpR07fEXwy3loFKnujtpnVGMeGq7fKeXP5WSKAp4jeVOQfTl&#13;
-                        VhoTC9XdnKE03w4VXVyGQ47tJETSKNd6FdnLq6bA25loHJrBVye2BXNyf97HTn0=
-                    </X509Certificate>
-                </X509Data>
-            </KeyInfo>
-        </Signature>
     </NFe>
 </enviNFe>

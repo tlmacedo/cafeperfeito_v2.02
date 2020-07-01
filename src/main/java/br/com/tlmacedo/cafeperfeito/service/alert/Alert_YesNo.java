@@ -4,7 +4,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 
 import java.io.Serializable;
-import java.util.Optional;
 
 public class Alert_YesNo extends AlertMensagem implements Serializable {
 
@@ -27,10 +26,31 @@ public class Alert_YesNo extends AlertMensagem implements Serializable {
 
         addButton();
 
+        getDialog().setResultConverter(o -> {
+            if (o == ButtonType.YES)
+                return true;
+            return false;
+        });
+
+        getDialog().showAndWait();
     }
 
-    public Optional<ButtonType> retorno() {
-        return getDialog().showAndWait();
+    public boolean retorno() {
+//        getDialog().setResultConverter(o -> {
+//            if (o == ButtonType.YES)
+//                return true;
+//            return false;
+//        });
+//
+//        getDialog().showAndWait();
+
+        return (boolean) getDialog().getResult();
 
     }
+
+//    public Optional<ButtonType> retorno_ButtonType() {
+//        return getDialog().showAndWait();
+//    }
+
+
 }

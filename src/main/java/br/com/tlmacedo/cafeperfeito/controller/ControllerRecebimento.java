@@ -234,7 +234,7 @@ public class ControllerRecebimento implements Initializable, ModeloCafePerfeito 
                                     Thread.currentThread().interrupt();
                                 }
                                 if (tasks.getDescricao().equals(EnumsTasks.RELATORIO_IMPRIME_RECIBO.getDescricao()))
-                                    new ServiceRecibo().imprimeRecibo(recebimentoProperty().getValue());
+                                    new ServiceRelatorio_Recibo().imprimeRecibo(recebimentoProperty().getValue());
                                 break;
                         }
                     }

@@ -11,9 +11,7 @@ import br.com.tlmacedo.cafeperfeito.service.ServiceSegundoPlano;
 import br.com.tlmacedo.cafeperfeito.service.ServiceValidarDado;
 import br.com.tlmacedo.cafeperfeito.service.alert.Alert_Ok;
 import br.com.tlmacedo.cafeperfeito.service.alert.Alert_YesNo;
-import br.com.tlmacedo.nfe.service.ExceptionNFe;
 import br.com.tlmacedo.nfe.service.NFev400;
-import javafx.scene.control.ButtonType;
 
 import javax.sql.rowset.serial.SerialBlob;
 import java.math.BigDecimal;
@@ -35,16 +33,12 @@ public class Nfe {
             try {
                 err = getnFev400().errNoCertificado();
             } catch (Exception e) {
-                if (new Alert_YesNo("Certificado digital",
+                repete = new Alert_YesNo("Certificado digital",
                         "erro no certificado, deseja tentar novamente?",
-                        null)
-                        .retorno().get() == ButtonType.YES)
-                    repete = true;
-                else
-                    repete = false;
+                        null).retorno();
             }
         } while (err && repete);
-        if (err && repete == false)
+        if (err)
             new Alert_Ok("Erro", "Operação cancelada pelo usuário!", null);
 
         return (err);
@@ -74,36 +68,26 @@ public class Nfe {
         else
             getnFev400().newNFev400(new Nfe_EnviNfeVO(getSaidaProdutoNfe(), imprimeLote).getEnviNfeVO());
 
-        boolean retorno = false;
-        try {
-            if (retorno = new ServiceSegundoPlano().executaListaTarefas(getnFev400().getNewTaskNFe(), "NF-e"))
-                update_MyNfe();
-            System.out.printf("\nretornou");
-        } catch (ExceptionNFe ex) {
-            System.out.printf("\nerroufeio!!!!\n");
-//            if (ex instanceof ExceptionDuplicidadeNFe) {
-//                System.out.printf("aqui coloco minha mesagem para resolver o problema");
-//                ex.getMessage();
-//            }
-            ex.printStackTrace();
-        }
-        System.out.printf("\nretorno: [%s]\n", retorno);
+//        try {
+        new ServiceSegundoPlano().executaListaTarefas(getnFev400().getNewTaskNFe(), "NF-e");
+//        } catch (Exception exception) {
+//            exception.printStackTrace();
+//        }
+        //update_MyNfe();
+        System.out.print("\npoxaPoxaPoxa\n");
     }
 
     private void update_MyNfe() {
         try {
-            System.out.printf("\npegando_meu_xmlAssinado:\n%s\n\n", getnFev400().getXmlAssinado());
             if (getnFev400().getXmlAssinado() != null)
                 getSaidaProdutoNfe().setXmlAssinatura(new SerialBlob(getnFev400().getXmlAssinado().getBytes()));
 
-            System.out.printf("\npegando_meu_xmlConsRecibo:\n%s\n\n", getnFev400().XML_CONS_RECIBO);
-            if (getnFev400().XML_CONS_RECIBO != null)
-                getSaidaProdutoNfe().setXmlConsRecibo(new SerialBlob(getnFev400().XML_CONS_RECIBO.getBytes()));
+            if (NFev400.XML_CONS_RECIBO != null)
+                getSaidaProdutoNfe().setXmlConsRecibo(new SerialBlob(NFev400.XML_CONS_RECIBO.getBytes()));
 
-            System.out.printf("\npegando_meu_xmlProcNfe:\n%s\n\n", getnFev400().getXmlProcNfe());
             if (getnFev400().getXmlProcNfe() != null) {
                 getSaidaProdutoNfe().setXmlProtNfe(new SerialBlob(getnFev400().getXmlProcNfe().getBytes()));
-                getSaidaProdutoNfe().setDigVal(getnFev400().DIG_VAL);
+                getSaidaProdutoNfe().setDigVal(NFev400.DIG_VAL);
             }
             setSaidaProdutoNfe(new SaidaProdutoNfeDAO().merger(getSaidaProdutoNfe()));
         } catch (Exception ex) {
@@ -113,7 +97,7 @@ public class Nfe {
     }
 
     private void newSaidaProdutoNfe(boolean imprimeLote) {
-        Empresa emissor = new EmpresaDAO().getById(Empresa.class, Long.valueOf(TCONFIG.getInfLoja().getId()));
+        Empresa emissor = new EmpresaDAO().getById(Empresa.class, (long) TCONFIG.getInfLoja().getId());
         SaidaProduto saidaProduto = getSaidaProdutoNfe().saidaProdutoProperty().getValue();
 
         getSaidaProdutoNfe().canceladaProperty().setValue(false);
@@ -216,7 +200,4 @@ public class Nfe {
     }
 
 
-    /**
-     * END Getters and Setters
-     */
 }

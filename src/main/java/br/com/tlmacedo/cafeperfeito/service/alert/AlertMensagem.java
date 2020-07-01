@@ -23,14 +23,13 @@ import static br.com.tlmacedo.cafeperfeito.service.ServiceVariaveisSistema.TCONF
 public class AlertMensagem implements Serializable {
 
     private final long serialVersionUID = 1L;
+
     private Thread thread;
     private Dialog dialog = new Dialog();
     private DialogPane dialogPane = dialog.getDialogPane();
     private Task<?> task;
     private String cabecalho = null, contentText = null, strIco = null;
 
-    //    private boolean retornoWait = false;
-//    private boolean retornoProgressBar = false;
     private boolean retornoValido = false;
     private boolean waitReturn = false;
     private HBox hBox = new HBox();
@@ -43,9 +42,6 @@ public class AlertMensagem implements Serializable {
     private Timeline timeline;
     private ProgressBar progressBar;
     private ProgressIndicator progressIndicator;
-//    private List SPLASH_IMAGENS = TCONFIG.getPersonalizacao().getSplashImagens().getImage();
-//    private String PATH_STYLE_SHEETS = TCONFIG.getPaths().getPathStyleSheets();
-
 
     /**
      * Begin Returns
@@ -57,7 +53,6 @@ public class AlertMensagem implements Serializable {
         getProgressBar().setProgress(ProgressBar.INDETERMINATE_PROGRESS);
         getProgressBar().prefWidthProperty().bind(getDialogPane().widthProperty().subtract(20));
 
-        //getLblMsg().prefWidthProperty().bind(getDialogPane().widthProperty().subtract(15));
         getLblMsg().getStyleClass().add("dialog-update-msg");
 
         gethBox().setSpacing(7);

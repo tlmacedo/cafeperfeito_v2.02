@@ -15,7 +15,7 @@ public class Alert_YesNoCancel extends AlertMensagem implements Serializable {
         setContentText(contextText);
         if (icone != null)
             addImage(icone);
-        
+
         loadDialog();
         loadDialogPane();
 

@@ -125,8 +125,8 @@ public class ControllerPrincipal implements Initializable, ModeloCafePerfeito {
                     }
                     try {
                         new Nfe(saidaProdutoNfe, true);
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                    } catch (Exception exception) {
+                        exception.printStackTrace();
                     }
                 });
 

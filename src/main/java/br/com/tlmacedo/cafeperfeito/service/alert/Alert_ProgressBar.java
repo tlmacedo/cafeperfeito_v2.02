@@ -1,18 +1,17 @@
 package br.com.tlmacedo.cafeperfeito.service.alert;
 
-import br.com.tlmacedo.nfe.service.ExceptionNFe;
+import br.com.tlmacedo.nfe.service.ExceptionWsNFe;
 import javafx.concurrent.Task;
 import javafx.scene.control.Button;
 
 import java.io.Serializable;
 
-import static br.com.tlmacedo.cafeperfeito.service.ServiceVariaveisNFe.MYINFNFE;
 
 public class Alert_ProgressBar extends AlertMensagem implements Serializable {
 
     public static final long serialVersionUID = 1L;
 
-    public Alert_ProgressBar(Task<?> task, String titulo, boolean isWait) throws ExceptionNFe {
+    public Alert_ProgressBar(Task<?> task, String titulo, boolean isWait) {
         setCabecalho(titulo);
         setTask(task);
         setWaitReturn(isWait);
@@ -40,37 +39,28 @@ public class Alert_ProgressBar extends AlertMensagem implements Serializable {
 
         getBtnCancel().setOnAction(actionEvent -> getTask().cancel());
 
-        getTask().setOnFailed(event -> {
-            setRetornoValido(false);
+        getTimeline().setOnFinished(event -> {
             dialogClose();
-            try {
-                throw new ExceptionNFe(MYINFNFE.getMyConfig().getTpAmb().intValue(), 99, "erroAlert");
-            } catch (ExceptionNFe exceptionNFe) {
-                exceptionNFe.printStackTrace();
-            }
+        });
+
+        getTask().setOnFailed(event -> {
+            dialogClose();
         });
 
         getTask().setOnCancelled(event -> {
-            setRetornoValido(false);
             dialogClose();
         });
 
         getTask().setOnSucceeded(event -> {
             setRetornoValido(true);
             getTimeline().stop();
-            if (isWait) {
+            if (isWaitReturn()) {
                 getProgressBar().setProgress(100);
                 addImage("/image/sis_logo_240dp.png");
                 getBtnOk().setDisable(false);
             } else {
                 dialogClose();
             }
-        });
-
-        getTimeline().setOnFinished(event -> {
-            setRetornoValido(false);
-            dialogClose();
-            return;
         });
 
         setThread(new Thread(getTask()));
@@ -81,8 +71,21 @@ public class Alert_ProgressBar extends AlertMensagem implements Serializable {
 
     }
 
-    public boolean retorno() {
-        return isRetornoValido();
+    public boolean retorno() throws Exception {
+        switch (getTask().getState()) {
+            case SUCCEEDED -> {
+                return true;
+            }
+            case FAILED -> {
+                if (getTask().getException() instanceof ExceptionWsNFe)
+                    throw new ExceptionWsNFe(getTask().getException());
+                else
+                    throw new Exception(getTask().getException());
+            }
+            default -> {
+                return false;
+            }
+        }
 
     }
 

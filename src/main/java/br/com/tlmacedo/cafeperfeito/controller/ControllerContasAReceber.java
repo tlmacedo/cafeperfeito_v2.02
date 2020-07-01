@@ -13,7 +13,7 @@ import br.com.tlmacedo.cafeperfeito.model.vo.Empresa;
 import br.com.tlmacedo.cafeperfeito.model.vo.Recebimento;
 import br.com.tlmacedo.cafeperfeito.service.ServiceCampoPersonalizado;
 import br.com.tlmacedo.cafeperfeito.service.ServiceMascara;
-import br.com.tlmacedo.cafeperfeito.service.ServiceRecibo;
+import br.com.tlmacedo.cafeperfeito.service.ServiceRelatorio_Recibo;
 import br.com.tlmacedo.cafeperfeito.service.ServiceSegundoPlano;
 import br.com.tlmacedo.cafeperfeito.service.autoComplete.ServiceAutoCompleteComboBox;
 import br.com.tlmacedo.cafeperfeito.service.format.FormatDataPicker;
@@ -228,7 +228,7 @@ public class ControllerContasAReceber implements Initializable, ModeloCafePerfei
                                 recebimento = (Recebimento) object;
                             if (recebimento == null) return;
 
-                            new ServiceRecibo().imprimeRecibo(recebimento);
+                            new ServiceRelatorio_Recibo().imprimeRecibo(recebimento);
                             break;
                     }
                 } catch (Exception ex) {
