@@ -323,8 +323,11 @@ public class ControllerSaidaProduto implements Initializable, ModeloCafePerfeito
 
                                     new ViewRecebimento().openViewRecebimento(getSaidaProduto().contasAReceberProperty().getValue());
 
-                                    if (saidaProdutoNfeProperty().getValue() != null)
+                                    ServiceUtilJSon.printJsonFromObject(saidaProdutoNfeProperty().getValue(), "0003");
+                                    System.out.printf("\n*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-\n\n\n\n");
+                                    if (saidaProdutoNfeProperty().getValue() != null) {
                                         new Nfe(saidaProdutoNfeProperty().getValue(), getChkPrintLoteProdutos().isSelected());
+                                    }
 
                                     atualizaTotaisCliente();
 
@@ -959,8 +962,8 @@ public class ControllerSaidaProduto implements Initializable, ModeloCafePerfeito
 
             if (getTpnNfe().isExpanded()) {
                 saidaProdutoNfeProperty().setValue(new SaidaProdutoNfe());
-                saidaProdutoNfeProperty().getValue().saidaProdutoProperty().setValue(getSaidaProduto());
                 getSaidaProduto().getSaidaProdutoNfeList().add(saidaProdutoNfeProperty().getValue());
+                saidaProdutoNfeProperty().getValue().saidaProdutoProperty().setValue(getSaidaProduto());
 
                 saidaProdutoNfeProperty().getValue().canceladaProperty().setValue(false);
                 saidaProdutoNfeProperty().getValue().statusSefazProperty().setValue(MYINFNFE.getSefaz().getStatuss().getStatus().stream()
@@ -1111,8 +1114,18 @@ public class ControllerSaidaProduto implements Initializable, ModeloCafePerfeito
             getSaidaProdutoDAO().transactionBegin();
             if (!getTmodelSaidaProduto().baixarEstoque()) return false;
             salvarContasAReceber();
+            ServiceUtilJSon.printJsonFromObject(saidaProdutoNfeProperty().getValue(), "0000");
+            System.out.printf("\n*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-\n\n\n\n");
             saidaProdutoProperty().setValue(getSaidaProdutoDAO().setTransactionPersist(saidaProdutoProperty().getValue()));
+            ServiceUtilJSon.printJsonFromObject(saidaProdutoNfeProperty().getValue(), "0001");
+            System.out.printf("\n*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-\n\n\n\n");
             getSaidaProdutoDAO().transactionCommit();
+            String chave = saidaProdutoNfeProperty().getValue().getChave();
+            saidaProdutoNfeProperty().setValue(saidaProdutoProperty().getValue().getSaidaProdutoNfeList().stream()
+                    .filter(saidaProdutoNfe1 -> saidaProdutoNfe1.chaveProperty().getValue().equals(chave))
+                    .findFirst().get());
+            ServiceUtilJSon.printJsonFromObject(saidaProdutoNfeProperty().getValue(), "0002");
+            System.out.printf("\n*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-\n\n\n\n");
             salvarFichaKardexList();
 
         } catch (Exception ex) {

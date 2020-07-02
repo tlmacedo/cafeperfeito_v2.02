@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="src/main/java"/>
+	<classpathentry kind="src" path="src/test/java"/>
+	<classpathentry kind="lib" path="lib/alertMensagem.jar"/>
+	<classpathentry kind="lib" path="lib/cafeperfeito_v2.01.jar"/>
+	<classpathentry kind="lib" path="lib/nfe_v400_back.jar"/>
+	<classpathentry kind="lib" path="lib/nfe_v400.jar"/>
+	<classpathentry kind="lib" path="lib/wsdl_Nfe_v400.jar"/>
+	<classpathentry kind="lib" path="lib/xsd_Config_Nfe.jar"/>
+	<classpathentry kind="lib" path="lib/xsd_Config_Sis.jar"/>
+	<classpathentry kind="lib" path="lib/xsd_Nfe_Cte.jar"/>
+	<classpathentry kind="output" path="target/classes"/>
+</classpath>

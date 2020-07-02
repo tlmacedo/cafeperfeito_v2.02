@@ -889,7 +889,8 @@ $F{emitCNPJ}.substring( 12)]]></textFieldExpression>
                 <text><![CDATA[NOME/RAZÃO SOCIAL]]></text>
             </staticText>
             <textField>
-                <reportElement x="0" y="154" width="354" height="13" uuid="8bae8261-61ef-4db9-8ade-fe7fb3b55752"/>
+                <reportElement stretchType="ElementGroupBottom" x="0" y="154" width="354" height="13"
+                               uuid="8bae8261-61ef-4db9-8ade-fe7fb3b55752"/>
                 <box leftPadding="3"/>
                 <textElement textAlignment="Justified" verticalAlignment="Bottom">
                     <font fontName="Times New Roman"/>
@@ -966,7 +967,8 @@ $F{destCNPJ}.substring( 9) : ""]]></textFieldExpression>
                 <text><![CDATA[ENDEREÇO]]></text>
             </staticText>
             <textField>
-                <reportElement x="0" y="174" width="261" height="13" uuid="0902b097-db9a-4b02-84df-05e4eba0b763"/>
+                <reportElement stretchType="ElementGroupBottom" x="0" y="174" width="261" height="13"
+                               uuid="0902b097-db9a-4b02-84df-05e4eba0b763"/>
                 <box leftPadding="3"/>
                 <textElement textAlignment="Justified" verticalAlignment="Bottom">
                     <font fontName="Times New Roman"/>

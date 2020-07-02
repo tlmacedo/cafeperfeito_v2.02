@@ -12,6 +12,9 @@ import net.sf.jasperreports.view.JasperViewer;
 import javax.swing.*;
 import java.io.File;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.sql.Blob;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,17 +26,33 @@ public class ServiceRelatorio extends JFrame {
 
         InputStream relJasper = getClass().getResourceAsStream(tipo.getDescricao());
 
-        JasperPrint impressao = null;
-
-        try {
-            impressao = JasperFillManager.fillReport(relJasper, new HashMap<>(), ds);
-//            impressao = JasperFillManager.fillReport(relJasper, new HashMap<>(), xml);
-            JasperViewer viewer = new JasperViewer(impressao, false);
-            viewer.setVisible(true);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        JasperPrint impressao = JasperFillManager.fillReport(relJasper, new HashMap<>(), ds);
+//        impressao = JasperFillManager.fillReport(relJasper, new HashMap<>(), xml);
+        JasperViewer viewer = new JasperViewer(impressao, false);
+        viewer.setVisible(true);
     }
+
+    public void gerar(RelatorioTipo tipo, Blob strXml) throws JRException, UnsupportedEncodingException, SQLException {
+        System.out.printf("strXml:\n%s\n", strXml);
+//        Document document = ServiceDocumentFactory.documentFactory(strXml);
+        String relatorio = "/Volumes/150GB-Development/cafeperfeito/cafeperfeito_v2.02/src/main/resources/relatorio/danfe.jasper";
+        //String relatorio = getClass().getResource(tipo.getDescricao()).toString();
+
+        InputStream stream = strXml.getBinaryStream();
+        //InputStream stream =
+
+
+        JRXmlDataSource xml = new JRXmlDataSource(stream, "/nfeProc/NFe/infNFe/det");
+        HashMap mapa = new HashMap();
+        JasperPrint jp = JasperFillManager.fillReport(relatorio, mapa, xml);
+
+        JasperViewer jv = new JasperViewer(jp, false);
+        jv.setTitle("VISUALIZADOR DE DOCUMENTO FISCAL ELETRÔNICA");
+        //jv.setIconImage(imagemTituloJanela.getImage());
+        jv.setVisible(true);
+
+    }
+
 
     public void gerar(RelatorioTipo tipo, Map parametros, List list) throws JRException {
 

@@ -1,16 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<enviNFe versao="4.00" xmlns="http://www.portalfiscal.inf.br/nfe">
-    <idLote>000000000000085</idLote>
-    <indSinc>0</indSinc>
+<nfeProc versao="4.00" xmlns="http://www.portalfiscal.inf.br/nfe">
     <NFe>
-        <infNFe versao="4.00" Id="NFe13200608009246000136550010000006161202020063">
+        <infNFe versao="4.00" Id="NFe13200608009246000136550010000006171202020060">
             <ide>
                 <cUF>13</cUF>
                 <cNF>20202006</cNF>
                 <natOp>VENDA Dentro Do Estado</natOp>
                 <mod>55</mod>
                 <serie>1</serie>
-                <nNF>616</nNF>
+                <nNF>617</nNF>
                 <dhEmi>2020-06-30T00:00:00-04:00</dhEmi>
                 <dhSaiEnt>2020-06-30T00:00:00-04:00</dhSaiEnt>
                 <tpNF>1</tpNF>
@@ -18,7 +16,7 @@
                 <cMunFG>1302603</cMunFG>
                 <tpImp>1</tpImp>
                 <tpEmis>1</tpEmis>
-                <cDV>3</cDV>
+                <cDV>0</cDV>
                 <tpAmb>2</tpAmb>
                 <finNFe>1</finNFe>
                 <indFinal>1</indFinal>
@@ -358,7 +356,7 @@
             </transp>
             <cobr>
                 <fat>
-                    <nFat>616</nFat>
+                    <nFat>617</nFat>
                     <vOrig>3370.60</vOrig>
                     <vDesc>180.00</vDesc>
                     <vLiq>3190.60</vLiq>
@@ -383,5 +381,41 @@
                 <fone>92981686148</fone>
             </infRespTec>
         </infNFe>
+        <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
+            <SignedInfo>
+                <CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+                <SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+                <Reference URI="#NFe13200608009246000136550010000006171202020060">
+                    <Transforms>
+                        <Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+                        <Transform Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+                    </Transforms>
+                    <DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+                    <DigestValue>HkObh1xA/mgQ/J2rD+AcEdObh2U=</DigestValue>
+                </Reference>
+            </SignedInfo>
+            <SignatureValue>
+                nY2stph62YJvRvsDdxAZUIo2R80tDgtciyXayvpzZfD5GiLFqAScbNvWXBkbkgCPPhfpvAY5eVaPX01rWBjl4AOC+ybOy604U1VIx4DzsNHq6anq63PUXP9irbKsHq8cz54lstQyZnTBbBvxQChEGPKbBGoSiVnYoPswUjHP+a7aDdMTwPuQgW1sqPCuC23aaU5higKYQzWLhYGL5yFk4cwmmtXawpJPI8CnJ9LxQ9kxiI4Nk9SDEFMSKBOfq7ZsPJ4NBIPIw+5RnZZs0Wc3hx1FYY8QQ6nk3J8bpPW24/OZHolga5S8BL0iJ/fUiHZ4j+1OD1zE3osi+AZwh9cTxg==
+            </SignatureValue>
+            <KeyInfo>
+                <X509Data>
+                    <X509Certificate>
+                        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
+                    </X509Certificate>
+                </X509Data>
+            </KeyInfo>
+        </Signature>
     </NFe>
-</enviNFe>
+    <protNFe versao="4.00">
+        <infProt>
+            <tpAmb>2</tpAmb>
+            <verAplic>AM4.00</verAplic>
+            <chNFe>13200608009246000136550010000006171202020060</chNFe>
+            <dhRecbto>2020-07-01T17:50:49-04:00</dhRecbto>
+            <nProt>113200008717257</nProt>
+            <digVal>HkObh1xA/mgQ/J2rD+AcEdObh2U=</digVal>
+            <cStat>100</cStat>
+            <xMotivo>Autorizado o uso da NF-e</xMotivo>
+        </infProt>
+    </protNFe>
+</nfeProc>

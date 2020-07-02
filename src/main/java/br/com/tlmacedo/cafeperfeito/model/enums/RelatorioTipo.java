@@ -8,7 +8,8 @@ import java.util.List;
 public enum RelatorioTipo {
 
     RECIBO(0, "/relatorio/recibo.jasper"),
-    NFE(1, "/relatorio/danfe.jasper");
+    NFE(1, "/relatorio/danfe.jasper"),
+    TESTE(2, "/relatorio/Blank_A4.jasper");
 
     private Integer cod;
     private String descricao;

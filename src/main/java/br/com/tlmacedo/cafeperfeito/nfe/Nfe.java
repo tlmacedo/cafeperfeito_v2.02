@@ -3,12 +3,11 @@ package br.com.tlmacedo.cafeperfeito.nfe;
 import br.com.tlmacedo.cafeperfeito.model.dao.EmpresaDAO;
 import br.com.tlmacedo.cafeperfeito.model.dao.SaidaProdutoNfeDAO;
 import br.com.tlmacedo.cafeperfeito.model.enums.NfeCobrancaDuplicataPagamentoMeio;
+import br.com.tlmacedo.cafeperfeito.model.enums.RelatorioTipo;
 import br.com.tlmacedo.cafeperfeito.model.vo.Empresa;
 import br.com.tlmacedo.cafeperfeito.model.vo.SaidaProduto;
 import br.com.tlmacedo.cafeperfeito.model.vo.SaidaProdutoNfe;
-import br.com.tlmacedo.cafeperfeito.service.ServiceMascara;
-import br.com.tlmacedo.cafeperfeito.service.ServiceSegundoPlano;
-import br.com.tlmacedo.cafeperfeito.service.ServiceValidarDado;
+import br.com.tlmacedo.cafeperfeito.service.*;
 import br.com.tlmacedo.cafeperfeito.service.alert.Alert_Ok;
 import br.com.tlmacedo.cafeperfeito.service.alert.Alert_YesNo;
 import br.com.tlmacedo.nfe.service.NFev400;
@@ -48,6 +47,8 @@ public class Nfe {
     public Nfe(SaidaProdutoNfe saidaProdutoNfe, boolean imprimeLote) throws Exception {
         setSaidaProdutoNfe(saidaProdutoNfe);
 
+        ServiceUtilJSon.printJsonFromObject(getSaidaProdutoNfe(), "0004");
+        System.out.printf("\n*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-\n\n\n\n");
         setnFev400(new NFev400(null,
                 MY_ZONE_TIME,
                 (MYINFNFE.getMyConfig().getTpAmb().intValue() == 1),
@@ -55,8 +56,9 @@ public class Nfe {
         if (errCertificado())
             return;
 
-        if (saidaProdutoNfe.idProperty().getValue() == 0)
-            newSaidaProdutoNfe(imprimeLote);
+
+//        if (saidaProdutoNfe.idProperty().getValue() == 0)
+//            newSaidaProdutoNfe(imprimeLote);
 
         if (getSaidaProdutoNfe().getXmlProtNfe() != null)
             getnFev400().newNFev400_xmlProtNfe(getSaidaProdutoNfe().getXmlProtNfe().toString());
@@ -73,7 +75,8 @@ public class Nfe {
 //        } catch (Exception exception) {
 //            exception.printStackTrace();
 //        }
-        //update_MyNfe();
+        update_MyNfe();
+        new ServiceRelatorio().gerar(RelatorioTipo.NFE, getSaidaProdutoNfe().getXmlProtNfe());
         System.out.print("\npoxaPoxaPoxa\n");
     }
 
@@ -105,16 +108,11 @@ public class Nfe {
         getSaidaProdutoNfe().naturezaOperacaoProperty().setValue(MYINFNFE.getMyConfig().getNatOp());
         getSaidaProdutoNfe().modeloProperty().setValue(MYINFNFE.getMyConfig().getMod());
 
-        addNumeroSerieUltimaNfe();
-        getSaidaProdutoNfe().dtHoraEmissaoProperty().setValue(saidaProduto.dtCadastroProperty().getValue());
-        if (saidaProduto.dtSaidaProperty().getValue()
-                .compareTo(saidaProduto.dtCadastroProperty().getValue().toLocalDate()) <= 0) {
-            getSaidaProdutoNfe().dtHoraSaidaProperty().setValue(saidaProduto
-                    .dtCadastroProperty().getValue());
-        } else {
-            getSaidaProdutoNfe().dtHoraSaidaProperty().setValue(saidaProduto
-                    .dtSaidaProperty().getValue().atTime(8, 0, 0));
-        }
+        if (getSaidaProdutoNfe().dtHoraSaidaProperty().getValue().toLocalDate()
+                .compareTo(getSaidaProdutoNfe().dtHoraEmissaoProperty().getValue().toLocalDate()) <= 0)
+            getSaidaProdutoNfe().dtHoraSaidaProperty().setValue(getSaidaProdutoNfe().dtHoraEmissaoProperty()
+                    .getValue());
+
         getSaidaProdutoNfe().destinoOperacaoProperty().setValue(MYINFNFE.getMyConfig().getIdDest());
         getSaidaProdutoNfe().impressaoTpImpProperty().setValue(MYINFNFE.getMyConfig().getTpImp());
         getSaidaProdutoNfe().impressaoTpEmisProperty().setValue(MYINFNFE.getMyConfig().getTpImp());
@@ -159,7 +157,7 @@ public class Nfe {
 
     private void addNumeroSerieUltimaNfe() {
         SaidaProdutoNfe nfeTemp;
-        int num = 616, serie = 1;
+        int num = 626, serie = 1;
         if ((nfeTemp = new SaidaProdutoNfeDAO().getAll(SaidaProdutoNfe.class, null, "numero DESC")
                 .stream().findFirst().orElse(null)) != null) {
             num = nfeTemp.numeroProperty().getValue() + 1;
