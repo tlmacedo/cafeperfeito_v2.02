@@ -110,16 +110,16 @@
             <artifactId>jasperreports</artifactId>
             <version>6.13.0</version>
         </dependency>
-        <!--        <dependency>-->
-        <!--            <groupId>net.sf.jasperreports</groupId>-->
-        <!--            <artifactId>jasperreports-fonts</artifactId>-->
-        <!--            <version>6.13.0</version>-->
-        <!--        </dependency>-->
-        <!--        <dependency>-->
-        <!--            <groupId>net.sf.jasperreports</groupId>-->
-        <!--            <artifactId>jasperreports-metadata</artifactId>-->
-        <!--            <version>6.13.0</version>-->
-        <!--        </dependency>-->
+        <dependency>
+            <groupId>net.sf.jasperreports</groupId>
+            <artifactId>jasperreports-fonts</artifactId>
+            <version>6.13.0</version>
+        </dependency>
+        <dependency>
+            <groupId>net.sf.jasperreports</groupId>
+            <artifactId>jasperreports-metadata</artifactId>
+            <version>6.13.0</version>
+        </dependency>
 
         <dependency>
             <groupId>com.google.zxing</groupId>

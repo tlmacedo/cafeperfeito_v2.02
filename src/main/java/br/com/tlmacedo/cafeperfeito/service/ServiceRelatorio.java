@@ -10,9 +10,10 @@ import net.sf.jasperreports.engine.data.JRXmlDataSource;
 import net.sf.jasperreports.view.JasperViewer;
 
 import javax.swing.*;
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -32,23 +33,22 @@ public class ServiceRelatorio extends JFrame {
         viewer.setVisible(true);
     }
 
-    public void gerar(RelatorioTipo tipo, Blob strXml) throws JRException, UnsupportedEncodingException, SQLException {
-        System.out.printf("strXml:\n%s\n", strXml);
-//        Document document = ServiceDocumentFactory.documentFactory(strXml);
-        String relatorio = "/Volumes/150GB-Development/cafeperfeito/cafeperfeito_v2.02/src/main/resources/relatorio/danfe.jasper";
-        //String relatorio = getClass().getResource(tipo.getDescricao()).toString();
+    public void gerar(RelatorioTipo tipo, String strXml) throws IOException, SQLException, JRException {
+        gerar(tipo, new ByteArrayInputStream(strXml.getBytes()));
+    }
 
-        InputStream stream = strXml.getBinaryStream();
-        //InputStream stream =
+    public void gerar(RelatorioTipo tipo, Blob blobXml) throws SQLException, IOException, JRException {
+        gerar(tipo, blobXml.getBinaryStream());
+    }
 
-
-        JRXmlDataSource xml = new JRXmlDataSource(stream, "/nfeProc/NFe/infNFe/det");
-        HashMap mapa = new HashMap();
-        JasperPrint jp = JasperFillManager.fillReport(relatorio, mapa, xml);
+    public void gerar(RelatorioTipo tipo, InputStream streamXml) throws JRException, IOException, SQLException {
+        InputStream streamRel = getClass().getResourceAsStream(tipo.getDescricao());
+        JRXmlDataSource xml = new JRXmlDataSource(streamXml, "/nfeProc/NFe/infNFe/det");
+        JasperPrint jp = JasperFillManager.fillReport(streamRel, new HashMap<>(), xml);
 
         JasperViewer jv = new JasperViewer(jp, false);
-        jv.setTitle("VISUALIZADOR DE DOCUMENTO FISCAL ELETRÔNICA");
-        //jv.setIconImage(imagemTituloJanela.getImage());
+        jv.setTitle("[DANFE] - Documento Auxiliar da Nota Fiscal Eletrônica");
+        //jv.setIconImage(ImageIO.read(getClass().getResourceAsStream("/image/recibo/Logo.png")));
         jv.setVisible(true);
 
     }

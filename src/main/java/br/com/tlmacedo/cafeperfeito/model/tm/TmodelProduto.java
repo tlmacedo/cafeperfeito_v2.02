@@ -41,10 +41,6 @@ public class TmodelProduto {
     private TreeTableColumn<Object, Integer> colEstoque;
     private TreeTableColumn<Object, String> colLote;
     private TreeTableColumn<Object, String> colValidade;
-//    private TreeTableColumn<Produto, String> colNFeEntrada;
-
-//    private TreeTableColumn<Produto, String> colEstoqueId;
-
 
     public TmodelProduto(TModelTipo tModelTipo) {
         this.tModelTipo = tModelTipo;
@@ -55,183 +51,154 @@ public class TmodelProduto {
      */
 
     public void criaTabela() {
-        try {
-            setColId(new TreeTableColumn<>("id"));
-            getColId().setPrefWidth(48);
-            getColId().setStyle("-fx-alignment: center-right;");
-            getColId().setCellValueFactory(cellData -> {
-                if (cellData.getValue().getValue() instanceof Produto)
-                    return ((Produto) cellData.getValue().getValue()).idProperty().asString();
-                return new SimpleStringProperty("");
-            });
+        setColId(new TreeTableColumn<>("id"));
+        getColId().setPrefWidth(48);
+        getColId().setStyle("-fx-alignment: center-right;");
+        getColId().setCellValueFactory(cellData -> {
+            if (cellData.getValue().getValue() instanceof Produto)
+                return ((Produto) cellData.getValue().getValue()).idProperty().asString();
+            return new SimpleStringProperty("");
+        });
 
-            setColCodigo(new TreeTableColumn<>("código"));
-            getColCodigo().setPrefWidth(60);
-            getColCodigo().setStyle("-fx-alignment: center-right;");
-            getColCodigo().setCellValueFactory(cellData -> {
-                if (cellData.getValue().getValue() instanceof Produto)
-                    return ((Produto) cellData.getValue().getValue()).codigoProperty();
-                return new SimpleStringProperty("");
-            });
+        setColCodigo(new TreeTableColumn<>("código"));
+        getColCodigo().setPrefWidth(60);
+        getColCodigo().setStyle("-fx-alignment: center-right;");
+        getColCodigo().setCellValueFactory(cellData -> {
+            if (cellData.getValue().getValue() instanceof Produto)
+                return ((Produto) cellData.getValue().getValue()).codigoProperty();
+            return new SimpleStringProperty("");
+        });
 
-            setColDescricao(new TreeTableColumn<>("descrição"));
-            getColDescricao().setPrefWidth(350);
-            getColDescricao().setCellValueFactory(cellData -> {
-                if (cellData.getValue().getValue() instanceof Produto)
-                    return ((Produto) cellData.getValue().getValue()).descricaoProperty();
-                return new SimpleStringProperty("");
-            });
+        setColDescricao(new TreeTableColumn<>("descrição"));
+        getColDescricao().setPrefWidth(350);
+        getColDescricao().setCellValueFactory(cellData -> {
+            if (cellData.getValue().getValue() instanceof Produto)
+                return ((Produto) cellData.getValue().getValue()).descricaoProperty();
+            return new SimpleStringProperty("");
+        });
 
-            setColVarejo(new TreeTableColumn<>("varejo"));
-            getColVarejo().setPrefWidth(50);
-            getColVarejo().setStyle("-fx-alignment: center-right;");
-            getColVarejo().setCellValueFactory(cellData -> {
-                if (cellData.getValue().getValue() instanceof Produto)
-                    return ((Produto) cellData.getValue().getValue()).varejoProperty().asString();
-                return new SimpleStringProperty("");
-            });
+        setColVarejo(new TreeTableColumn<>("varejo"));
+        getColVarejo().setPrefWidth(50);
+        getColVarejo().setStyle("-fx-alignment: center-right;");
+        getColVarejo().setCellValueFactory(cellData -> {
+            if (cellData.getValue().getValue() instanceof Produto)
+                return ((Produto) cellData.getValue().getValue()).varejoProperty().asString();
+            return new SimpleStringProperty("");
+        });
 
-            setColUndCom(new TreeTableColumn<>("und com"));
-            getColUndCom().setPrefWidth(70);
-            getColUndCom().setCellValueFactory(cellData -> {
-                if (cellData.getValue().getValue() instanceof Produto)
-                    return ((Produto) cellData.getValue().getValue()).unidadeComercialProperty().asString();
-                return new SimpleStringProperty("");
-            });
+        setColUndCom(new TreeTableColumn<>("und com"));
+        getColUndCom().setPrefWidth(70);
+        getColUndCom().setCellValueFactory(cellData -> {
+            if (cellData.getValue().getValue() instanceof Produto)
+                return ((Produto) cellData.getValue().getValue()).unidadeComercialProperty().asString();
+            return new SimpleStringProperty("");
+        });
 
-            setColPrecoCompra(new TreeTableColumn<>("preço compra"));
-            getColPrecoCompra().setPrefWidth(90);
-            getColPrecoCompra().setStyle("-fx-alignment: center-right;");
-            getColPrecoCompra().setCellValueFactory(cellData -> {
-                if (cellData.getValue().getValue() instanceof Produto)
-                    return new SimpleStringProperty(ServiceMascara.getMoeda(((Produto) cellData.getValue().getValue()).precoCompraProperty().getValue(), 2));
-                return new SimpleStringProperty("0,00");
-            });
+        setColPrecoCompra(new TreeTableColumn<>("preço compra"));
+        getColPrecoCompra().setPrefWidth(90);
+        getColPrecoCompra().setStyle("-fx-alignment: center-right;");
+        getColPrecoCompra().setCellValueFactory(cellData -> {
+            if (cellData.getValue().getValue() instanceof Produto)
+                return new SimpleStringProperty(ServiceMascara.getMoeda(((Produto) cellData.getValue().getValue()).precoCompraProperty().getValue(), 2));
+            return new SimpleStringProperty("0,00");
+        });
 
-            setColPrecoVenda(new TreeTableColumn<>("preço venda"));
-            getColPrecoVenda().setPrefWidth(90);
-            getColPrecoVenda().setStyle("-fx-alignment: center-right;");
-            getColPrecoVenda().setCellValueFactory(cellData -> {
-                if (cellData.getValue().getValue() instanceof Produto)
-                    return new SimpleStringProperty(ServiceMascara.getMoeda(((Produto) cellData.getValue().getValue()).precoVendaProperty().getValue(), 2));
-                return new SimpleStringProperty("");
-            });
+        setColPrecoVenda(new TreeTableColumn<>("preço venda"));
+        getColPrecoVenda().setPrefWidth(90);
+        getColPrecoVenda().setStyle("-fx-alignment: center-right;");
+        getColPrecoVenda().setCellValueFactory(cellData -> {
+            if (cellData.getValue().getValue() instanceof Produto)
+                return new SimpleStringProperty(ServiceMascara.getMoeda(((Produto) cellData.getValue().getValue()).precoVendaProperty().getValue(), 2));
+            return new SimpleStringProperty("");
+        });
 
-            setColEstoque(new TreeTableColumn<>("estoque"));
-            getColEstoque().setPrefWidth(65);
-            getColEstoque().setStyle("-fx-alignment: center-right;");
-            getColEstoque().setCellValueFactory(cellData -> {
-                if (cellData.getValue().getValue() instanceof Produto)
-                    return ((Produto) cellData.getValue().getValue()).tblEstoqueProperty().asObject();
-                if (cellData.getValue().getValue() instanceof ProdutoEstoque)
-                    return ((ProdutoEstoque) cellData.getValue().getValue()).qtdProperty().asObject();
-                return new SimpleObjectProperty<>(0);
-            });
+        setColEstoque(new TreeTableColumn<>("estoque"));
+        getColEstoque().setPrefWidth(65);
+        getColEstoque().setStyle("-fx-alignment: center-right;");
+        getColEstoque().setCellValueFactory(cellData -> {
+            if (cellData.getValue().getValue() instanceof Produto)
+                return ((Produto) cellData.getValue().getValue()).tblEstoqueProperty().asObject();
+            if (cellData.getValue().getValue() instanceof ProdutoEstoque)
+                return ((ProdutoEstoque) cellData.getValue().getValue()).qtdProperty().asObject();
+            return new SimpleObjectProperty<>(0);
+        });
 
-            setColLote(new TreeTableColumn<>("lote"));
-            getColLote().setPrefWidth(105);
-            getColLote().setStyle("-fx-alignment: center;");
-            getColLote().setCellValueFactory(cellData -> {
-                if (cellData.getValue().getValue() instanceof Produto)
-                    return ((Produto) cellData.getValue().getValue()).tblLoteProperty();
-                if (cellData.getValue().getValue() instanceof ProdutoEstoque)
-                    return ((ProdutoEstoque) cellData.getValue().getValue()).loteProperty();
-                return new SimpleStringProperty("");
-            });
+        setColLote(new TreeTableColumn<>("lote"));
+        getColLote().setPrefWidth(105);
+        getColLote().setStyle("-fx-alignment: center;");
+        getColLote().setCellValueFactory(cellData -> {
+            if (cellData.getValue().getValue() instanceof Produto)
+                return ((Produto) cellData.getValue().getValue()).tblLoteProperty();
+            if (cellData.getValue().getValue() instanceof ProdutoEstoque)
+                return ((ProdutoEstoque) cellData.getValue().getValue()).loteProperty();
+            return new SimpleStringProperty("");
+        });
 
-            setColValidade(new TreeTableColumn<>("validade"));
-            getColValidade().setPrefWidth(105);
-            getColValidade().setStyle("-fx-alignment: center-right;");
-            getColValidade().setCellValueFactory(cellData -> {
-//                if (cellData.getValue().getValue() instanceof Produto)
-//                    return new SimpleStringProperty(((Produto) cellData.getValue().getValue()).tblValidadeProperty().getValue().format(DTF_DATA));
-                if (cellData.getValue().getValue() instanceof ProdutoEstoque)
-                    return new SimpleStringProperty(((ProdutoEstoque) cellData.getValue().getValue()).dtValidadeProperty().getValue().format(DTF_DATA));
-                return new SimpleStringProperty("");
-            });
-
-//            setColNFeEntrada(new TreeTableColumn<>("doc. ent."));
-//            getColNFeEntrada().setPrefWidth(100);
-//            getColNFeEntrada().setStyle("-fx-alignment: center-right;");
-//            getColNFeEntrada().setCellValueFactory(param -> param.getValue().getValue().tblDocEntradaProperty());
-
-//            setColEstoqueId(new TreeTableColumn<>("ID"));
-//            getColEstoqueId().setPrefWidth(60);
-//            getColEstoqueId().setStyle("-fx-alignment: center-right;");
-//            getColEstoqueId().setCellValueFactory(param -> param.getValue().getValue().tblEstoque_idProperty().asString());
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        setColValidade(new TreeTableColumn<>("validade"));
+        getColValidade().setPrefWidth(105);
+        getColValidade().setStyle("-fx-alignment: center-right;");
+        getColValidade().setCellValueFactory(cellData -> {
+            if (cellData.getValue().getValue() instanceof ProdutoEstoque)
+                return new SimpleStringProperty(((ProdutoEstoque) cellData.getValue().getValue()).dtValidadeProperty().getValue().format(DTF_DATA));
+            return new SimpleStringProperty("");
+        });
 
     }
 
     public void preencheTabela() {
-        try {
-            setProdutoEstoqueTreeItem(new TreeItem<>());
-            getProdutoFilteredList().stream()
-                    .forEach(produto -> {
-                                final int[] estq = {0};
-                                TreeItem<Object> paiItem = new TreeItem(produto);
-                                getProdutoEstoqueTreeItem().getChildren().add(paiItem);
-                                if (gettModelTipo().equals(TModelTipo.PROD_VENDA))
-                                    produto.getProdutoEstoqueList().stream()
-                                            .filter(produtoEstoque -> produtoEstoque.qtdProperty().getValue().compareTo(0) > 0)
-                                            .sorted(Comparator.comparing(ProdutoEstoque::getDtValidade))
-                                            .collect(Collectors.groupingBy(ProdutoEstoque::getLote,
-                                                    LinkedHashMap::new,
-                                                    Collectors.toList()))
-                                            .forEach((s, produtoEstoques) -> {
-                                                paiItem.getChildren().add(new TreeItem<>(new ProdutoEstoque(produtoEstoques)));
-                                                estq[0] += produtoEstoques.stream().collect(Collectors.summingInt(ProdutoEstoque::getQtd));
-                                            });
-                                else
-                                    estq[0] = produto.getProdutoEstoqueList().stream().collect(Collectors.summingInt(ProdutoEstoque::getQtd));
+        setProdutoEstoqueTreeItem(new TreeItem<>());
+        getProdutoFilteredList()
+                .forEach(produto -> {
+                            final int[] estq = {0};
+                            TreeItem paiItem = new TreeItem(produto);
+                            getProdutoEstoqueTreeItem().getChildren().add(paiItem);
+                            if (gettModelTipo().equals(TModelTipo.PROD_VENDA))
+                                produto.getProdutoEstoqueList().stream()
+                                        .filter(produtoEstoque -> produtoEstoque.qtdProperty().getValue().compareTo(0) > 0)
+                                        .sorted(Comparator.comparing(ProdutoEstoque::getDtValidade))
+                                        .collect(Collectors.groupingBy(ProdutoEstoque::getLote,
+                                                LinkedHashMap::new,
+                                                Collectors.toList()))
+                                        .forEach((s, produtoEstoques) -> {
+                                            paiItem.getChildren().add(new TreeItem<>(new ProdutoEstoque(produtoEstoques)));
+                                            estq[0] += produtoEstoques.stream().mapToInt(ProdutoEstoque::getQtd).sum();
+                                        });
+                            else
+                                estq[0] = produto.getProdutoEstoqueList().stream().mapToInt(ProdutoEstoque::getQtd).sum();
 
-                                ((Produto) paiItem.getValue()).tblEstoqueProperty().setValue(estq[0]);
-                            }
-                    );
+                            ((Produto) paiItem.getValue()).tblEstoqueProperty().setValue(estq[0]);
+                        }
+                );
 
-            System.out.printf("");
-            getTtvProdutoEstoque().getColumns().setAll(
-                    getColId(), getColCodigo(), getColDescricao(), getColVarejo(), getColUndCom(), getColPrecoCompra(),
-                    getColPrecoVenda(), getColEstoque(), getColLote(), getColValidade()
-            );
-            System.out.printf("");
+        getTtvProdutoEstoque().getColumns().setAll(
+                getColId(), getColCodigo(), getColDescricao(), getColVarejo(), getColUndCom(), getColPrecoCompra(),
+                getColPrecoVenda(), getColEstoque(), getColLote(), getColValidade()
+        );
 
-            if (gettModelTipo().equals(TModelTipo.PROD_VENDA)) {
-                getTtvProdutoEstoque().getColumns().remove(getColPrecoCompra());
-            } else {
-                getTtvProdutoEstoque().getColumns().remove(getColLote());
-                getTtvProdutoEstoque().getColumns().remove(getColValidade());
-            }
-
-            getTtvProdutoEstoque().getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-
-
-            getTtvProdutoEstoque().setRoot(getProdutoEstoqueTreeItem());
-            getTtvProdutoEstoque().setShowRoot(false);
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        if (gettModelTipo().equals(TModelTipo.PROD_VENDA))
+            getTtvProdutoEstoque().getColumns().remove(getColPrecoCompra());
+        else {
+            getTtvProdutoEstoque().getColumns().remove(getColLote());
+            getTtvProdutoEstoque().getColumns().remove(getColValidade());
         }
+
+        getTtvProdutoEstoque().getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+
+        getTtvProdutoEstoque().setRoot(getProdutoEstoqueTreeItem());
+        getTtvProdutoEstoque().setShowRoot(false);
     }
 
     public void escutaLista() {
-        try {
-            System.out.printf("");
-            getTtvProdutoEstoque().setRowFactory(objectTreeTableView -> new TreeTableRow<>() {
-                @Override
-                protected void updateItem(Object item, boolean empty) {
-                    super.updateItem(item, empty);
-                    getStyleClass().removeAll(getStyleClass().stream().filter(s -> s.contains("produto-")).collect(Collectors.toList()));
-                    if (!empty)
-                        if (item instanceof ProdutoEstoque)
-                            getStyleClass().add("produto-estoque");
-                }
-            });
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        getTtvProdutoEstoque().setRowFactory(objectTreeTableView -> new TreeTableRow<>() {
+            @Override
+            protected void updateItem(Object item, boolean empty) {
+                super.updateItem(item, empty);
+                getStyleClass().removeAll(getStyleClass().stream().filter(s -> s.contains("produto-")).collect(Collectors.toList()));
+                if (!empty)
+                    if (item instanceof ProdutoEstoque)
+                        getStyleClass().add("produto-estoque");
+            }
+        });
 
         getTxtPesquisaProduto().textProperty().addListener((ov, o, n) -> {
             String strFind = n.toLowerCase().trim();
@@ -246,20 +213,16 @@ public class TmodelProduto {
                     return true;
                 if (produto.cestProperty().get().contains(strFind))
                     return true;
-                if (produto.getProdutoCodigoBarraList().stream()
-                        .filter(codBarra -> codBarra.getCodigoBarra().contains(strFind))
-                        .findFirst().orElse(null) != null)
-                    return true;
-                return false;
+                return produto.getProdutoCodigoBarraList().stream()
+                        .anyMatch(codBarra -> codBarra.getCodigoBarra().contains(strFind));
             });
         });
 
-        getProdutoFilteredList().addListener((ListChangeListener<? super Produto>) change -> {
-            Platform.runLater(() -> {
-                preencheTabela();
-                getTtvProdutoEstoque().refresh();
-            });
-        });
+        getProdutoFilteredList().addListener((ListChangeListener<? super Produto>) change ->
+                Platform.runLater(() -> {
+                    preencheTabela();
+                    getTtvProdutoEstoque().refresh();
+                }));
 
         getLblRegistrosLocalizados().textProperty().bind(Bindings.createStringBinding(() ->
                 String.format("%5d", getProdutoFilteredList().size()), getProdutoFilteredList()
@@ -411,7 +374,7 @@ public class TmodelProduto {
         this.colValidade = colValidade;
     }
 
-/**
- * END Gets and Setters
- */
+    /**
+     * END Gets and Setters
+     */
 }

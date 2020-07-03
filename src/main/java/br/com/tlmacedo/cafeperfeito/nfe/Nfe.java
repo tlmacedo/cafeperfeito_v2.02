@@ -70,14 +70,9 @@ public class Nfe {
         else
             getnFev400().newNFev400(new Nfe_EnviNfeVO(getSaidaProdutoNfe(), imprimeLote).getEnviNfeVO());
 
-//        try {
         new ServiceSegundoPlano().executaListaTarefas(getnFev400().getNewTaskNFe(), "NF-e");
-//        } catch (Exception exception) {
-//            exception.printStackTrace();
-//        }
         update_MyNfe();
         new ServiceRelatorio().gerar(RelatorioTipo.NFE, getSaidaProdutoNfe().getXmlProtNfe());
-        System.out.print("\npoxaPoxaPoxa\n");
     }
 
     private void update_MyNfe() {

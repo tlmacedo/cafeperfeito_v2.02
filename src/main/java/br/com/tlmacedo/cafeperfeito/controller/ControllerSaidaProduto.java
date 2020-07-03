@@ -323,8 +323,6 @@ public class ControllerSaidaProduto implements Initializable, ModeloCafePerfeito
 
                                     new ViewRecebimento().openViewRecebimento(getSaidaProduto().contasAReceberProperty().getValue());
 
-                                    ServiceUtilJSon.printJsonFromObject(saidaProdutoNfeProperty().getValue(), "0003");
-                                    System.out.printf("\n*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-\n\n\n\n");
                                     if (saidaProdutoNfeProperty().getValue() != null) {
                                         new Nfe(saidaProdutoNfeProperty().getValue(), getChkPrintLoteProdutos().isSelected());
                                     }
@@ -743,9 +741,6 @@ public class ControllerSaidaProduto implements Initializable, ModeloCafePerfeito
 //                                        vlrTotalUtilizado[0].toString());
                             });
                     empresa.limiteUtilizadoProperty().setValue(vlrTotalUtilizado[0]);
-//                    System.out.printf("*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-\n");
-//                    System.out.printf("*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-\n");
-//                    System.out.printf("*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-\n");
 //                    empresa.limiteUtilizadoProperty().setValue(
 //                            contasAReceberObservableList.stream()
 //                                    .filter(aReceber -> aReceber.getSaidaProduto().getCliente().idProperty().getValue() == empresa.idProperty().getValue())
@@ -1114,18 +1109,8 @@ public class ControllerSaidaProduto implements Initializable, ModeloCafePerfeito
             getSaidaProdutoDAO().transactionBegin();
             if (!getTmodelSaidaProduto().baixarEstoque()) return false;
             salvarContasAReceber();
-            ServiceUtilJSon.printJsonFromObject(saidaProdutoNfeProperty().getValue(), "0000");
-            System.out.printf("\n*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-\n\n\n\n");
             saidaProdutoProperty().setValue(getSaidaProdutoDAO().setTransactionPersist(saidaProdutoProperty().getValue()));
-            ServiceUtilJSon.printJsonFromObject(saidaProdutoNfeProperty().getValue(), "0001");
-            System.out.printf("\n*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-\n\n\n\n");
             getSaidaProdutoDAO().transactionCommit();
-            String chave = saidaProdutoNfeProperty().getValue().getChave();
-            saidaProdutoNfeProperty().setValue(saidaProdutoProperty().getValue().getSaidaProdutoNfeList().stream()
-                    .filter(saidaProdutoNfe1 -> saidaProdutoNfe1.chaveProperty().getValue().equals(chave))
-                    .findFirst().get());
-            ServiceUtilJSon.printJsonFromObject(saidaProdutoNfeProperty().getValue(), "0002");
-            System.out.printf("\n*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-\n\n\n\n");
             salvarFichaKardexList();
 
         } catch (Exception ex) {
