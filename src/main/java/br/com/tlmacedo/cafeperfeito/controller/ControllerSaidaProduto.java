@@ -296,9 +296,10 @@ public class ControllerSaidaProduto implements Initializable, ModeloCafePerfeito
                             break;
                         case F2:
                             if (validarSaida()) {
+                                BigDecimal vlrCredDeb;
+                                if ((vlrCredDeb = utilizacaoDeCreditoDebito()) == null) return;
                                 getEnumsTasksList().clear();
                                 getEnumsTasksList().add(EnumsTasks.SALVAR_ENT_SAIDA);
-                                BigDecimal vlrCredDeb = utilizacaoDeCreditoDebito();
                                 if (new ServiceSegundoPlano().executaListaTarefas(newTaskSaidaProduto(), String.format("Salvando %s!", getNomeTab()))) {
                                     if (vlrCredDeb.compareTo(BigDecimal.ZERO) != 0) {
                                         try {
@@ -1032,6 +1033,12 @@ public class ControllerSaidaProduto implements Initializable, ModeloCafePerfeito
     }
 
     private boolean validarSaida() {
+        System.out.printf("validarCliente:[%s]", validarCliente());
+        System.out.printf("\tvalidarNFe:[%s]", validarNFe());
+        System.out.printf("\tlimiteDisponivel:[%s]", ServiceMascara.getBigDecimalFromTextField(getLblLimiteDisponivel().getText(), 2));
+        System.out.printf("\ttotalLiquido:[%s]", ServiceMascara.getBigDecimalFromTextField(getLblTotalLiquido().getText(), 2));
+        System.out.printf("\tvlrValido:[%s]\n", (ServiceMascara.getBigDecimalFromTextField(getLblLimiteDisponivel().getText(), 2)
+                .compareTo(ServiceMascara.getBigDecimalFromTextField(getLblTotalLiquido().getText(), 2)) >= 0));
         boolean result = ((validarCliente() && validarNFe()
                 && getSaidaProdutoProdutoObservableList().size() > 0)
                 && (ServiceMascara.getBigDecimalFromTextField(getLblLimiteDisponivel().getText(), 2)
@@ -1105,11 +1112,8 @@ public class ControllerSaidaProduto implements Initializable, ModeloCafePerfeito
     private boolean salvarSaidaProduto() {
         try {
             setSaidaProdutoDAO(new SaidaProdutoDAO());
-//            getSaidaProdutoDAO().transactionBegin();
             if (!getTmodelSaidaProduto().baixarEstoque()) return false;
             salvarContasAReceber();
-//            saidaProdutoProperty().setValue(getSaidaProdutoDAO().setTransactionPersist(saidaProdutoProperty().getValue()));
-//            getSaidaProdutoDAO().transactionCommit();
             saidaProdutoProperty().setValue(getSaidaProdutoDAO().merger(saidaProdutoProperty().getValue()));
             if (getSaidaProdutoNfe() != null)
                 setSaidaProdutoNfe(saidaProduto.getValue().getSaidaProdutoNfeList().get(saidaProduto.getValue().getSaidaProdutoNfeList().size() - 1));
@@ -1204,8 +1208,11 @@ public class ControllerSaidaProduto implements Initializable, ModeloCafePerfeito
                         ServiceMascara.getMoeda((vlrCredDeb.multiply(new BigDecimal("-1."))), 2));
                 strIcone = null;
             }
-            if (new Alert_YesNoCancel(strCabecalho, strContextText, strIcone).retorno().get() == ButtonType.CANCEL)
+            ButtonType retorno = new Alert_YesNoCancel(strCabecalho, strContextText, strIcone).retorno().get();
+            if (retorno.equals(ButtonType.NO))
                 return BigDecimal.ZERO;
+            if (retorno.equals(ButtonType.CANCEL))
+                return null;
         }
         return vlrCredDeb;
     }
