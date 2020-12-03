@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import static br.com.tlmacedo.cafeperfeito.interfaces.Regex_Convert.*;
-import static br.com.tlmacedo.cafeperfeito.service.ServiceVariaveisSistema.TCONFIG;
+import static br.com.tlmacedo.cafeperfeito.service.ServiceConfigSis.TCONFIG;
 
 
 public class ControllerPrincipal implements Initializable, ModeloCafePerfeito {
@@ -251,13 +251,6 @@ public class ControllerPrincipal implements Initializable, ModeloCafePerfeito {
             });
             getTabPaneViewPrincipal().getSelectionModel().select(tabId);
         }
-    }
-
-    public boolean teclaDisponivel(KeyCode keyCode) {
-        String tecla = keyCode.toString().toLowerCase();
-        if (keyCode.equals(KeyCode.HELP))
-            tecla = "insert";
-        return getServiceStatusBar().getStbTeclas().getText().toLowerCase().contains(String.format("%s-", tecla));
     }
 
     public BorderPane getPainelViewPrincipal() {

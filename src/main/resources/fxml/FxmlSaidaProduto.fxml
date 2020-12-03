@@ -1167,7 +1167,7 @@
                                                         <Insets left="5.0"/>
                                                     </padding>
                                                 </Label>
-                                                <TextField fx:id="txtPesquisaProduto"
+                                                <TextField fx:id="txtPesquisa"
                                                            accessibleText="len::80;type::TEXTO;value::;seteditable::;">
                                                     <tooltip>
                                                         <Tooltip text="campo de pesquisa."/>

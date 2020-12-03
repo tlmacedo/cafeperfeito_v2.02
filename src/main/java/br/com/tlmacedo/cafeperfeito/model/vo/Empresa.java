@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-import static br.com.tlmacedo.cafeperfeito.service.ServiceVariaveisSistema.TCONFIG;
+import static br.com.tlmacedo.cafeperfeito.service.ServiceConfigSis.TCONFIG;
 
 @Entity(name = "Empresa")
 @Table(name = "empresa")
@@ -58,6 +58,7 @@ public class Empresa implements Serializable {
     private ObjectProperty<BigDecimal> vlrUltimoPedido = new SimpleObjectProperty<>(BigDecimal.ZERO);
     private IntegerProperty qtdPedidos = new SimpleIntegerProperty(0);
     private ObjectProperty<BigDecimal> vlrTotalPedidos = new SimpleObjectProperty<>(BigDecimal.ZERO);
+    private List<SaidaProduto> saidaProdutoList = new ArrayList<>();
 
     public Empresa() {
     }
@@ -474,6 +475,16 @@ public class Empresa implements Serializable {
 
     public void setVlrTotalPedidos(BigDecimal vlrTotalPedidos) {
         this.vlrTotalPedidos.set(vlrTotalPedidos);
+    }
+
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    public List<SaidaProduto> getSaidaProdutoList() {
+        return saidaProdutoList;
+    }
+
+    public void setSaidaProdutoList(List<SaidaProduto> saidaProdutoList) {
+        this.saidaProdutoList = saidaProdutoList;
     }
 
     @Transient

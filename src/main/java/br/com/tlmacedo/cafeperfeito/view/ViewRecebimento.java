@@ -13,7 +13,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.math.BigDecimal;
 
-import static br.com.tlmacedo.cafeperfeito.service.ServiceVariaveisSistema.TCONFIG;
+import static br.com.tlmacedo.cafeperfeito.service.ServiceConfigSis.TCONFIG;
 import static javafx.stage.StageStyle.UNDECORATED;
 
 public class ViewRecebimento {

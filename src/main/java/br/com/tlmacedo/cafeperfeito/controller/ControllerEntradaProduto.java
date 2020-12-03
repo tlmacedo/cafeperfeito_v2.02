@@ -11,6 +11,7 @@ import br.com.tlmacedo.cafeperfeito.service.alert.Alert_Ok;
 import br.com.tlmacedo.cafeperfeito.service.autoComplete.ServiceAutoCompleteComboBox;
 import br.com.tlmacedo.cafeperfeito.service.format.ServiceFormatDataPicker;
 import br.com.tlmacedo.cafeperfeito.view.ViewEntradaProduto;
+import br.com.tlmacedo.nfe.service.ServiceUtilXml;
 import br.inf.portalfiscal.xsd.cte.procCTe_v300.CteProc;
 import br.inf.portalfiscal.xsd.cte.procCTe_v300.TCTe;
 import br.inf.portalfiscal.xsd.nfe.procNFe.TNfeProc;
@@ -148,6 +149,7 @@ public class ControllerEntradaProduto implements Initializable, ModeloCafePerfei
     private EventHandler eventHandlerEntradaProduto;
 
     private TmodelProduto tmodelProduto;
+    private ObservableList<Produto> produtoObservableList = FXCollections.observableArrayList(new ProdutoDAO().getAll(Produto.class, null, "descricao"));
     private FilteredList<Produto> produtoFilteredList;
 
     private TmodelEntradaProduto tmodelEntradaProduto;
@@ -241,14 +243,14 @@ public class ControllerEntradaProduto implements Initializable, ModeloCafePerfei
 
         setEventHandlerEntradaProduto(new EventHandler<KeyEvent>() {
             @Override
-            public void handle(KeyEvent event) {
+            public void handle(KeyEvent keyEvent) {
                 try {
                     if (ControllerPrincipal.getCtrlPrincipal().getTabPaneViewPrincipal().getSelectionModel().getSelectedIndex() < 0)
                         return;
                     if (!ControllerPrincipal.getCtrlPrincipal().getTabPaneViewPrincipal().getSelectionModel().getSelectedItem().getText().equals(getNomeTab()))
                         return;
-                    if (!ControllerPrincipal.getCtrlPrincipal().teclaDisponivel(event.getCode())) return;
-                    switch (event.getCode()) {
+                    if (!ControllerPrincipal.getCtrlPrincipal().getServiceStatusBar().teclaValida(keyEvent)) return;
+                    switch (keyEvent.getCode()) {
                         case F1:
                             limpaCampos(getPainelViewEntradaProduto());
                             break;
@@ -511,7 +513,7 @@ public class ControllerEntradaProduto implements Initializable, ModeloCafePerfei
                         switch (tasks) {
                             case TABELA_CRIAR:
                                 setTmodelProduto(new TmodelProduto(TModelTipo.PROD_COMPRA));
-                                getTmodelProduto().criaTabela();
+                                getTmodelProduto().tabela_criar();
 
                                 setTmodelEntradaProduto(new TmodelEntradaProduto());
                                 getTmodelEntradaProduto().criaTabela();
@@ -520,7 +522,8 @@ public class ControllerEntradaProduto implements Initializable, ModeloCafePerfei
                             case TABELA_VINCULAR:
                                 getTmodelProduto().setLblRegistrosLocalizados(getLblRegistrosLocalizados());
                                 getTmodelProduto().setTtvProdutoEstoque(getTtvProdutoEstoque());
-                                getTmodelProduto().setTxtPesquisaProduto(getTxtPesquisaProduto());
+                                getTmodelProduto().setTxtPesquisa(getTxtPesquisaProduto());
+                                getTmodelProduto().setProdutoFilteredList(new FilteredList<>(getProdutoObservableList()));
                                 setProdutoFilteredList(getTmodelProduto().getProdutoFilteredList());
                                 getTmodelProduto().escutaLista();
 
@@ -560,7 +563,7 @@ public class ControllerEntradaProduto implements Initializable, ModeloCafePerfei
                                 break;
 
                             case TABELA_PREENCHER:
-                                getTmodelProduto().preencheTabela();
+                                getTmodelProduto().tabela_preencher();
 
                                 getTmodelEntradaProduto().preencheTabela();
                                 break;
@@ -568,6 +571,7 @@ public class ControllerEntradaProduto implements Initializable, ModeloCafePerfei
                             case SALVAR_ENT_SAIDA:
                                 if (guardarEntradaProduto()) {
                                     if (salvarEntradaProduto()) {
+                                        getProdutoObservableList().setAll(new ProdutoDAO().getAll(Produto.class, null, "descricao"));
                                         getTmodelProduto().atualizarProdutos();
                                     } else {
                                         Thread.currentThread().interrupt();
@@ -576,27 +580,27 @@ public class ControllerEntradaProduto implements Initializable, ModeloCafePerfei
                                     Thread.currentThread().interrupt();
                                 }
                                 break;
-                            case NFE_GERAR:
-//                                gerarXmlNFe();
-                                break;
-                            case NFE_ASSINAR:
-//                                if (xmlNFeProperty().getValue() == null)
-//                                    Thread.currentThread().interrupt();
-//                                assinarXmlNFe();
-                                break;
-                            case NFE_TRANSMITIR:
-//                                if (xmlNFeAssinadoProperty().getValue() == null)
-//                                    Thread.currentThread().interrupt();
-//                                transmitirXmlNFe();
-                                break;
-                            case NFE_RETORNO:
-//                                if (xmlNFeAutorizacaoProperty().getValue() == null)
-//                                    Thread.currentThread().interrupt();
-//                                retornoXmlNFe();
-//                                if (xmlNFeRetAutorizacaoProperty().getValue() == null)
-//                                    Thread.currentThread().interrupt();
-//                                retornoProcNFe();
-                                break;
+//                            case NFE_GERAR:
+////                                gerarXmlNFe();
+//                                break;
+//                            case NFE_ASSINAR:
+////                                if (xmlNFeProperty().getValue() == null)
+////                                    Thread.currentThread().interrupt();
+////                                assinarXmlNFe();
+//                                break;
+//                            case NFE_TRANSMITIR:
+////                                if (xmlNFeAssinadoProperty().getValue() == null)
+////                                    Thread.currentThread().interrupt();
+////                                transmitirXmlNFe();
+//                                break;
+//                            case NFE_RETORNO:
+////                                if (xmlNFeAutorizacaoProperty().getValue() == null)
+////                                    Thread.currentThread().interrupt();
+////                                retornoXmlNFe();
+////                                if (xmlNFeRetAutorizacaoProperty().getValue() == null)
+////                                    Thread.currentThread().interrupt();
+////                                retornoProcNFe();
+//                                break;
                         }
                     }
                     updateMessage("tarefa concluída!!!");
@@ -1833,6 +1837,14 @@ public class ControllerEntradaProduto implements Initializable, ModeloCafePerfei
 
     public void setFichaKardexList(List<FichaKardex> fichaKardexList) {
         this.fichaKardexList = fichaKardexList;
+    }
+
+    public ObservableList<Produto> getProdutoObservableList() {
+        return produtoObservableList;
+    }
+
+    public void setProdutoObservableList(ObservableList<Produto> produtoObservableList) {
+        this.produtoObservableList = produtoObservableList;
     }
 
     /**

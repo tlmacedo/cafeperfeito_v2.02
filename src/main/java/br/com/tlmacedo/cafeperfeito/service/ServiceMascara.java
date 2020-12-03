@@ -18,8 +18,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static br.com.tlmacedo.cafeperfeito.interfaces.Regex_Convert.*;
-import static br.com.tlmacedo.cafeperfeito.service.ServiceVariaveisSistema.MY_LOCALE;
-import static br.com.tlmacedo.cafeperfeito.service.ServiceVariaveisSistema.TCONFIG;
+import static br.com.tlmacedo.cafeperfeito.service.ServiceConfigSis.MY_LOCALE;
+import static br.com.tlmacedo.cafeperfeito.service.ServiceConfigSis.TCONFIG;
 
 public class ServiceMascara {
 

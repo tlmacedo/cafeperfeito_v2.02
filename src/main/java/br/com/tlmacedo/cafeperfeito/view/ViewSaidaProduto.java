@@ -6,7 +6,7 @@ import javafx.scene.control.Tab;
 
 import java.io.IOException;
 
-import static br.com.tlmacedo.cafeperfeito.service.ServiceVariaveisSistema.TCONFIG;
+import static br.com.tlmacedo.cafeperfeito.service.ServiceConfigSis.TCONFIG;
 
 public class ViewSaidaProduto {
 

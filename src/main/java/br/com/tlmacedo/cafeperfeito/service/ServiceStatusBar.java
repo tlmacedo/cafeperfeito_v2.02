@@ -7,6 +7,8 @@ import javafx.animation.Timeline;
 import javafx.scene.control.Label;
 import javafx.scene.control.ToolBar;
 import javafx.scene.control.Tooltip;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.util.Duration;
 import org.apache.commons.lang3.StringUtils;
 
@@ -14,7 +16,7 @@ import java.time.LocalTime;
 
 import static br.com.tlmacedo.cafeperfeito.interfaces.Regex_Convert.DTF_DATAHORA_HMS;
 import static br.com.tlmacedo.cafeperfeito.interfaces.Regex_Convert.DTF_HORA_HMS;
-import static br.com.tlmacedo.cafeperfeito.service.ServiceVariaveisSistema.TCONFIG;
+import static br.com.tlmacedo.cafeperfeito.service.ServiceConfigSis.TCONFIG;
 
 //import org.apache.maven.surefire.shade.booter.org.apache.commons.lang3.StringUtils;
 
@@ -37,6 +39,14 @@ public class ServiceStatusBar {
     /**
      * END Voids
      */
+
+    public boolean teclaValida(KeyEvent keyEvent) {
+        KeyCode keyCode = keyEvent.getCode();
+        return getStbTeclas().getText().toLowerCase().contains(
+                String.format("%s-", keyCode.equals(KeyCode.HELP) ?
+                        "insert"
+                        : keyCode.toString().toLowerCase()));
+    }
 
     public ServiceStatusBar(ToolBar statusBar, Label lblUsuario, Label lblTeclas, Label lblRelogio) {
         this.statusBar = statusBar;
@@ -67,39 +77,39 @@ public class ServiceStatusBar {
     }
 
 
-    public Timeline getTimeline() {
+    private Timeline getTimeline() {
         return timeline;
     }
 
-    public void setTimeline(Timeline timeline) {
+    private void setTimeline(Timeline timeline) {
         this.timeline = timeline;
     }
 
-    public ToolBar getStatusBar() {
+    private ToolBar getStatusBar() {
         return statusBar;
     }
 
-    public Label getStbLogadoInf() {
+    private Label getStbLogadoInf() {
         return stbLogadoInf;
     }
 
-    public void setStbLogadoInf(Label stbLogadoInf) {
+    private void setStbLogadoInf(Label stbLogadoInf) {
         this.stbLogadoInf = stbLogadoInf;
     }
 
-    public Label getStbTeclas() {
+    private Label getStbTeclas() {
         return stbTeclas;
     }
 
-    public void setStbTeclas(Label stbTeclas) {
+    private void setStbTeclas(Label stbTeclas) {
         this.stbTeclas = stbTeclas;
     }
 
-    public Label getStbRelogio() {
+    private Label getStbRelogio() {
         return stbRelogio;
     }
 
-    public void setStbRelogio(Label stbRelogio) {
+    private void setStbRelogio(Label stbRelogio) {
         this.stbRelogio = stbRelogio;
     }
 }

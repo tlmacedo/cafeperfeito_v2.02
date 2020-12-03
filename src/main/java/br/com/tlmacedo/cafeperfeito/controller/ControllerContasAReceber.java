@@ -178,16 +178,16 @@ public class ControllerContasAReceber implements Initializable, ModeloCafePerfei
 
         setEventHandlerContasAReceber(new EventHandler<KeyEvent>() {
             @Override
-            public void handle(KeyEvent event) {
+            public void handle(KeyEvent keyEvent) {
                 try {
                     if (ControllerPrincipal.getCtrlPrincipal().getTabPaneViewPrincipal().getSelectionModel().getSelectedIndex() < 0)
                         return;
                     if (!ControllerPrincipal.getCtrlPrincipal().getTabPaneViewPrincipal().getSelectionModel().getSelectedItem().getText().equals(getNomeTab()))
                         return;
-                    if (!ControllerPrincipal.getCtrlPrincipal().teclaDisponivel(event.getCode())) return;
+                    if (!ControllerPrincipal.getCtrlPrincipal().getServiceStatusBar().teclaValida(keyEvent)) return;
                     Object object;
                     Recebimento recebimento = null;
-                    switch (event.getCode()) {
+                    switch (keyEvent.getCode()) {
                         case F1:
                             limpaCampos(getPainelViewContasAReceber());
                             break;
@@ -219,7 +219,7 @@ public class ControllerContasAReceber implements Initializable, ModeloCafePerfei
                             fechar();
                             break;
                         case P:
-                            if (!event.isControlDown() || getTtvContasAReceber().getSelectionModel().getSelectedItem() == null)
+                            if (!keyEvent.isControlDown() || getTtvContasAReceber().getSelectionModel().getSelectedItem() == null)
                                 return;
                             object = getTtvContasAReceber().getSelectionModel().getSelectedItem().getValue();
                             if (object instanceof ContasAReceber)

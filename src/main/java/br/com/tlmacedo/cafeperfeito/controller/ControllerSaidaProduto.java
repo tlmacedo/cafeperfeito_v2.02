@@ -8,6 +8,7 @@ import br.com.tlmacedo.cafeperfeito.model.tm.TmodelProduto;
 import br.com.tlmacedo.cafeperfeito.model.tm.TmodelSaidaProduto;
 import br.com.tlmacedo.cafeperfeito.model.vo.*;
 import br.com.tlmacedo.cafeperfeito.nfe.Nfe;
+import br.com.tlmacedo.cafeperfeito.nfe.NfeService;
 import br.com.tlmacedo.cafeperfeito.service.*;
 import br.com.tlmacedo.cafeperfeito.service.alert.Alert_Ok;
 import br.com.tlmacedo.cafeperfeito.service.alert.Alert_YesNoCancel;
@@ -43,7 +44,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static br.com.tlmacedo.cafeperfeito.interfaces.Regex_Convert.DTF_DATA;
-import static br.com.tlmacedo.cafeperfeito.service.ServiceVariaveisNFe.MYINFNFE;
+import static br.com.tlmacedo.cafeperfeito.nfe.NfeService.getChaveNfe;
+import static br.com.tlmacedo.cafeperfeito.service.ServiceConfigNFe.MYINFNFE;
 import static java.time.temporal.ChronoUnit.DAYS;
 
 public class ControllerSaidaProduto implements Initializable, ModeloCafePerfeito {
@@ -107,7 +109,7 @@ public class ControllerSaidaProduto implements Initializable, ModeloCafePerfeito
     public TextArea txaNfeInformacoesAdicionais;
 
     public TitledPane tpnItensTotaisDetalhe;
-    public TextField txtPesquisaProduto;
+    public TextField txtPesquisa;
     public Label lblStatus;
     public Label lblRegistrosLocalizados;
     public TreeTableView<Object> ttvProdutoEstoque;
@@ -131,10 +133,11 @@ public class ControllerSaidaProduto implements Initializable, ModeloCafePerfeito
 
     private String nomeTab = ViewSaidaProduto.getTitulo();
     private String nomeController = "saidaProduto";
-    private ObjectProperty<StatusBarSaidaProduto> statusBar = new SimpleObjectProperty<>(StatusBarSaidaProduto.DIGITACAO);
+    private ObjectProperty<StatusSaidaProduto> statusBar = new SimpleObjectProperty<>(StatusSaidaProduto.DIGITACAO);
     private EventHandler eventHandlerSaidaProduto;
 
     private TmodelProduto tmodelProduto;
+    private ObservableList<Produto> produtoObservableList = FXCollections.observableArrayList(new ProdutoDAO().getAll(Produto.class, null, "descricao"));
     private FilteredList<Produto> produtoFilteredList;
 
     private TmodelSaidaProduto tmodelSaidaProduto;
@@ -243,7 +246,7 @@ public class ControllerSaidaProduto implements Initializable, ModeloCafePerfeito
         escutaTitledTab();
         statusBarProperty().addListener((ov, o, n) -> {
             if (n == null)
-                statusBarProperty().setValue(StatusBarSaidaProduto.DIGITACAO);
+                statusBarProperty().setValue(StatusSaidaProduto.DIGITACAO);
             showStatusBar();
         });
 
@@ -273,21 +276,21 @@ public class ControllerSaidaProduto implements Initializable, ModeloCafePerfeito
 
         setEventHandlerSaidaProduto(new EventHandler<KeyEvent>() {
             @Override
-            public void handle(KeyEvent event) {
+            public void handle(KeyEvent keyEvent) {
                 try {
                     if (ControllerPrincipal.getCtrlPrincipal().getTabPaneViewPrincipal().getSelectionModel().getSelectedIndex() < 0)
                         return;
                     if (!ControllerPrincipal.getCtrlPrincipal().getTabPaneViewPrincipal().getSelectionModel().getSelectedItem().getText().equals(getNomeTab()))
                         return;
-                    if (event.getCode().equals(KeyCode.HELP)
+                    if (keyEvent.getCode().equals(KeyCode.HELP)
                             && getTvItensNfe().isFocused()) {
                         ProdutoEstoque estoqueEscolhido = getEstoqueSelecionado();
 
                         getSaidaProdutoProdutoObservableList().add(new SaidaProdutoProduto(estoqueEscolhido, TipoCodigoCFOP.BONIFICACAO, 1));
                         ControllerPrincipal.getCtrlPrincipal().getPainelViewPrincipal().fireEvent(ServiceComandoTecladoMouse.pressTecla(KeyCode.F8));
                     }
-                    if (!ControllerPrincipal.getCtrlPrincipal().teclaDisponivel(event.getCode())) return;
-                    switch (event.getCode()) {
+                    if (!ControllerPrincipal.getCtrlPrincipal().getServiceStatusBar().teclaValida(keyEvent)) return;
+                    switch (keyEvent.getCode()) {
                         case F1:
                             limpaCampos(getPainelViewSaidaProduto());
                             break;
@@ -325,6 +328,7 @@ public class ControllerSaidaProduto implements Initializable, ModeloCafePerfeito
 
                                     if (saidaProdutoNfeProperty().getValue() != null) {
                                         new Nfe(saidaProdutoNfeProperty().getValue(), getChkPrintLoteProdutos().isSelected());
+//                                        getSaidaProdutoDAO().merger(getSaidaProduto());
                                     }
 
                                     atualizaTotaisCliente();
@@ -345,7 +349,7 @@ public class ControllerSaidaProduto implements Initializable, ModeloCafePerfeito
                             //getCboEmpresa().setValue(null);
                             break;
                         case F7:
-                            getTxtPesquisaProduto().requestFocus();
+                            getTxtPesquisa().requestFocus();
                             break;
                         case F8:
                             getTvItensNfe().requestFocus();
@@ -405,7 +409,7 @@ public class ControllerSaidaProduto implements Initializable, ModeloCafePerfeito
 
         getCboEmpresa().addEventHandler(KeyEvent.KEY_PRESSED, event -> {
             if (event.getCode() == KeyCode.ENTER && getCboEmpresa().getValue() != null)
-                getTxtPesquisaProduto().requestFocus();
+                getTxtPesquisa().requestFocus();
         });
 
         getCboEndereco().getSelectionModel().selectedItemProperty().addListener((ov, o, n) -> {
@@ -427,7 +431,7 @@ public class ControllerSaidaProduto implements Initializable, ModeloCafePerfeito
             getLblPrazo().setText(n.toString());
         });
 
-        getTxtPesquisaProduto().addEventHandler(KeyEvent.KEY_PRESSED, event -> {
+        getTxtPesquisa().addEventHandler(KeyEvent.KEY_PRESSED, event -> {
             if (event.getCode() != KeyCode.ENTER) return;
             getTtvProdutoEstoque().requestFocus();
             getTtvProdutoEstoque().getSelectionModel().selectFirst();
@@ -456,7 +460,7 @@ public class ControllerSaidaProduto implements Initializable, ModeloCafePerfeito
                 getCboNfeDadosNaturezaOperacao().requestFocus();
             } else {
                 limpaCampos(getTpnNfe());
-                getTxtPesquisaProduto().requestFocus();
+                getTxtPesquisa().requestFocus();
             }
         });
 
@@ -517,7 +521,7 @@ public class ControllerSaidaProduto implements Initializable, ModeloCafePerfeito
                         switch (tasks) {
                             case TABELA_CRIAR:
                                 setTmodelProduto(new TmodelProduto(TModelTipo.PROD_VENDA));
-                                getTmodelProduto().criaTabela();
+                                getTmodelProduto().tabela_criar();
 
                                 setTmodelSaidaProduto(new TmodelSaidaProduto());
                                 getTmodelSaidaProduto().criaTabela();
@@ -526,14 +530,15 @@ public class ControllerSaidaProduto implements Initializable, ModeloCafePerfeito
                             case TABELA_VINCULAR:
                                 getTmodelProduto().setLblRegistrosLocalizados(getLblRegistrosLocalizados());
                                 getTmodelProduto().setTtvProdutoEstoque(getTtvProdutoEstoque());
-                                getTmodelProduto().setTxtPesquisaProduto(getTxtPesquisaProduto());
+                                getTmodelProduto().setTxtPesquisa(getTxtPesquisa());
+                                getTmodelProduto().setProdutoFilteredList(new FilteredList<>(getProdutoObservableList()));
                                 setProdutoFilteredList(getTmodelProduto().getProdutoFilteredList());
                                 getTmodelProduto().escutaLista();
 
                                 setFichaKardexList(new ArrayList<>());
                                 getTmodelSaidaProduto().setFichaKardexList(getFichaKardexList());
                                 getTmodelSaidaProduto().setTvItensNfe(getTvItensNfe());
-                                getTmodelSaidaProduto().setTxtPesquisaProduto(getTxtPesquisaProduto());
+                                getTmodelSaidaProduto().setTxtPesquisaProduto(getTxtPesquisa());
                                 getTmodelSaidaProduto().setSaidaProdutoProdutoObservableList(getSaidaProdutoProdutoObservableList());
                                 prazoProperty().bind(getTmodelSaidaProduto().prazoProperty());
                                 getTmodelSaidaProduto().escutaLista();
@@ -582,7 +587,7 @@ public class ControllerSaidaProduto implements Initializable, ModeloCafePerfeito
                                 break;
 
                             case TABELA_PREENCHER:
-                                getTmodelProduto().preencheTabela();
+                                getTmodelProduto().tabela_preencher();
 
                                 getTmodelSaidaProduto().preencheTabela();
                                 break;
@@ -590,6 +595,7 @@ public class ControllerSaidaProduto implements Initializable, ModeloCafePerfeito
                             case SALVAR_ENT_SAIDA:
                                 if (guardarSaidaProduto())
                                     if (salvarSaidaProduto()) {
+                                        getProdutoObservableList().setAll(new ProdutoDAO().getAll(Produto.class, null, "descricao"));
                                         getTmodelProduto().atualizarProdutos();
                                     } else {
                                         Thread.currentThread().interrupt();
@@ -597,14 +603,15 @@ public class ControllerSaidaProduto implements Initializable, ModeloCafePerfeito
                                 else
                                     Thread.currentThread().interrupt();
                                 break;
-                            case NFE_GERAR:
-                                break;
-                            case NFE_ASSINAR:
-                                break;
-                            case NFE_TRANSMITIR:
-                                break;
-                            case NFE_RETORNO:
-                                break;
+//                            case NFE_GERAR:
+//
+//                                break;
+//                            case NFE_ASSINAR:
+//                                break;
+//                            case NFE_TRANSMITIR:
+//                                break;
+//                            case NFE_RETORNO:
+//                                break;
                             case RELATORIO_IMPRIME_NFE:
 //                                if (xmlNFeProcProperty().getValue() == null)
 //                                    Thread.currentThread().interrupt();
@@ -758,15 +765,7 @@ public class ControllerSaidaProduto implements Initializable, ModeloCafePerfeito
 //                                                    .reduce(BigDecimal.ZERO, BigDecimal::add)
 //                                    ));
                 });
-        Integer nLast = 0;
-        try {
-            nLast = new SaidaProdutoNfeDAO().getLast(SaidaProdutoNfe.class, "numero").numeroProperty().getValue();
-        } catch (Exception ex) {
-            if (!(ex instanceof NullPointerException))
-                ex.printStackTrace();
-            nLast = 0;
-        }
-        nfeLastNumberProperty().setValue(nLast);
+        nfeLastNumberProperty().setValue(NfeService.getLastNumeroNFe());
     }
 
     private void exibirEmpresaDetalhe() {
@@ -985,7 +984,7 @@ public class ControllerSaidaProduto implements Initializable, ModeloCafePerfeito
                 saidaProdutoNfeProperty().getValue().pagamentoMeioProperty().setValue(getCboNfeCobrancaPagamentoMeio().getSelectionModel().getSelectedItem().getCod());
                 saidaProdutoNfeProperty().getValue().informacaoAdicionalProperty().setValue(getTxaNfeInformacoesAdicionais().getText().trim());
 
-                saidaProdutoNfeProperty().getValue().chaveProperty().setValue(ServiceValidarDado.getChaveNfe(saidaProdutoNfeProperty().getValue()));
+                saidaProdutoNfeProperty().getValue().chaveProperty().setValue(getChaveNfe(saidaProdutoNfeProperty().getValue()));
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -1106,11 +1105,14 @@ public class ControllerSaidaProduto implements Initializable, ModeloCafePerfeito
     private boolean salvarSaidaProduto() {
         try {
             setSaidaProdutoDAO(new SaidaProdutoDAO());
-            getSaidaProdutoDAO().transactionBegin();
+//            getSaidaProdutoDAO().transactionBegin();
             if (!getTmodelSaidaProduto().baixarEstoque()) return false;
             salvarContasAReceber();
-            saidaProdutoProperty().setValue(getSaidaProdutoDAO().setTransactionPersist(saidaProdutoProperty().getValue()));
-            getSaidaProdutoDAO().transactionCommit();
+//            saidaProdutoProperty().setValue(getSaidaProdutoDAO().setTransactionPersist(saidaProdutoProperty().getValue()));
+//            getSaidaProdutoDAO().transactionCommit();
+            saidaProdutoProperty().setValue(getSaidaProdutoDAO().merger(saidaProdutoProperty().getValue()));
+            if (getSaidaProdutoNfe() != null)
+                setSaidaProdutoNfe(saidaProduto.getValue().getSaidaProdutoNfeList().get(saidaProduto.getValue().getSaidaProdutoNfeList().size() - 1));
             salvarFichaKardexList();
 
         } catch (Exception ex) {
@@ -1140,10 +1142,10 @@ public class ControllerSaidaProduto implements Initializable, ModeloCafePerfeito
 
     private boolean gerarDanfe() throws Exception {
         getEnumsTasksList().clear();
-        getEnumsTasksList().add(EnumsTasks.NFE_GERAR);
-        getEnumsTasksList().add(EnumsTasks.NFE_ASSINAR);
-        getEnumsTasksList().add(EnumsTasks.NFE_TRANSMITIR);
-        getEnumsTasksList().add(EnumsTasks.NFE_RETORNO);
+//        getEnumsTasksList().add(EnumsTasks.NFE_GERAR);
+//        getEnumsTasksList().add(EnumsTasks.NFE_ASSINAR);
+//        getEnumsTasksList().add(EnumsTasks.NFE_TRANSMITIR);
+//        getEnumsTasksList().add(EnumsTasks.NFE_RETORNO);
         getEnumsTasksList().add(EnumsTasks.RELATORIO_IMPRIME_NFE);
         if (new ServiceSegundoPlano().executaListaTarefas(newTaskSaidaProduto(), String.format("Gerando NFe [%d]!", Integer.valueOf(getTxtNfeDadosNumero().getText())))) {
             new Alert_Ok("Sucesso NFe",
@@ -1617,12 +1619,12 @@ public class ControllerSaidaProduto implements Initializable, ModeloCafePerfeito
         this.tpnItensTotaisDetalhe = tpnItensTotaisDetalhe;
     }
 
-    public TextField getTxtPesquisaProduto() {
-        return txtPesquisaProduto;
+    public TextField getTxtPesquisa() {
+        return txtPesquisa;
     }
 
-    public void setTxtPesquisaProduto(TextField txtPesquisaProduto) {
-        this.txtPesquisaProduto = txtPesquisaProduto;
+    public void setTxtPesquisa(TextField txtPesquisa) {
+        this.txtPesquisa = txtPesquisa;
     }
 
     public Label getLblStatus() {
@@ -1793,15 +1795,15 @@ public class ControllerSaidaProduto implements Initializable, ModeloCafePerfeito
         this.nomeController = nomeController;
     }
 
-    public StatusBarSaidaProduto getStatusBar() {
+    public StatusSaidaProduto getStatusBar() {
         return statusBar.get();
     }
 
-    public ObjectProperty<StatusBarSaidaProduto> statusBarProperty() {
+    public ObjectProperty<StatusSaidaProduto> statusBarProperty() {
         return statusBar;
     }
 
-    public void setStatusBar(StatusBarSaidaProduto statusBar) {
+    public void setStatusBar(StatusSaidaProduto statusBar) {
         this.statusBar.set(statusBar);
     }
 
@@ -2047,6 +2049,14 @@ public class ControllerSaidaProduto implements Initializable, ModeloCafePerfeito
 
     public void setComboEmpresa(ServiceAutoCompleteComboBox comboEmpresa) {
         this.comboEmpresa = comboEmpresa;
+    }
+
+    public ObservableList<Produto> getProdutoObservableList() {
+        return produtoObservableList;
+    }
+
+    public void setProdutoObservableList(ObservableList<Produto> produtoObservableList) {
+        this.produtoObservableList = produtoObservableList;
     }
 
     /**

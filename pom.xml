@@ -14,7 +14,7 @@
         <maven.version>3.5.3</maven.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputencoding>UTF-8</project.reporting.outputencoding>
-        <jdk.version>14.0.1</jdk.version>
+        <jdk.version>15</jdk.version>
         <maven.compiler.source>${jdk.version}</maven.compiler.source>
         <maven.compiler.target>${jdk.version}</maven.compiler.target>
     </properties>
@@ -43,6 +43,14 @@
                         <target>${jdk.version}</target>
                     </configuration>
                 </plugin>
+                <plugin>
+                    <groupId>org.openjfx</groupId>
+                    <artifactId>javafx-maven-plugin</artifactId>
+                    <version>0.0.5</version>
+                    <configuration>
+                        <mainClass>Main</mainClass>
+                    </configuration>
+                </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
@@ -51,6 +59,11 @@
 
     <dependencies>
 
+        <!--        <dependency>-->
+        <!--            <groupId>org.openjfx</groupId>-->
+        <!--            <artifactId>javafx-controls</artifactId>-->
+        <!--            <version>15.0.1</version>-->
+        <!--        </dependency>-->
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-base</artifactId>

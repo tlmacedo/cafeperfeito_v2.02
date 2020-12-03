@@ -8,6 +8,7 @@
     </meusBancos>
     <myConfig>
         <certificadoCfgs/>
+        <certificadoToken>tokenSafeNet5100.cfg</certificadoToken>
         <certificadoCacerts>NfeCacerts</certificadoCacerts>
         <portaSSl>443</portaSSl>
         <versao>4.00</versao>
@@ -30,6 +31,8 @@
         <nPais>BRASIL</nPais>
         <CRT>3</CRT>
         <infAdic>TOTAL R$ %s*t*DT. VENC.: %s*n*DADOS BANCARIOS PARA TRANSFERENCIA*n*BANCO %s AG: %s C/C: %s</infAdic>
+        <homCNPJ>99999999000191</homCNPJ>
+        <homRazao>NF-E EMITIDA EM AMBIENTE DE HOMOLOGACAO - SEM VALOR FISCAL</homRazao>
         <infRespTecs>
             <infRespTec id="1" cnpj="08009246000136" xContato="THIAGO LEIROS MACEDO" email="tl.macedo@hotmail.com"
                         fone="92 98168-6148"/>

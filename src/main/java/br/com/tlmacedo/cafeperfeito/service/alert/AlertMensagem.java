@@ -17,8 +17,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import static br.com.tlmacedo.cafeperfeito.service.ServiceVariaveisSistema.SPLASH_IMAGENS;
-import static br.com.tlmacedo.cafeperfeito.service.ServiceVariaveisSistema.TCONFIG;
+import static br.com.tlmacedo.cafeperfeito.service.ServiceConfigSis.SPLASH_IMAGENS;
+import static br.com.tlmacedo.cafeperfeito.service.ServiceConfigSis.TCONFIG;
 
 public class AlertMensagem implements Serializable {
 
@@ -38,7 +38,7 @@ public class AlertMensagem implements Serializable {
     private List<Button> btns = new ArrayList<>();
     private Button btnOk, btnCancel, btnYes, btnNo, btnApply, btnClose, btnFinish;
     private Label lblMsg = new Label(), lblContagem = new Label();
-    private int timeOut = TCONFIG.getTimeOut();
+    private int timeOut = TCONFIG.getTimeOut().intValue();
     private Timeline timeline;
     private ProgressBar progressBar;
     private ProgressIndicator progressIndicator;

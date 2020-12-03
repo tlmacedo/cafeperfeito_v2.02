@@ -3,10 +3,8 @@ package br.com.tlmacedo.cafeperfeito.service;
 
 import br.com.tlmacedo.cafeperfeito.model.dao.RecebimentoDAO;
 import br.com.tlmacedo.cafeperfeito.model.vo.Recebimento;
-import br.com.tlmacedo.cafeperfeito.model.vo.SaidaProdutoNfe;
 import br.com.tlmacedo.cafeperfeito.model.vo.UsuarioLogado;
 import br.com.tlmacedo.cafeperfeito.service.alert.Alert_Ok;
-import br.com.tlmacedo.nfe.model.vo.IdeVO;
 import org.apache.commons.lang3.StringUtils;
 
 import java.time.LocalDate;
@@ -17,13 +15,10 @@ import java.util.regex.Pattern;
 
 import static br.com.tlmacedo.cafeperfeito.interfaces.Regex_Convert.REGEX_EMAIL;
 import static br.com.tlmacedo.cafeperfeito.interfaces.Regex_Convert.REGEX_TELEFONE;
-import static br.com.tlmacedo.cafeperfeito.service.ServiceVariaveisSistema.TCONFIG;
 
 public class ServiceValidarDado {
     private static final int[] pesoCpf = {11, 10, 9, 8, 7, 6, 5, 4, 3, 2};
     private static final int[] pesoCnpj = {6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2};
-    private static final int[] pesoChaveNfeCte = {4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2, 9,
-            8, 7, 6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2};
     private static final int[] pesoCafe = {3, 2, 9, 8, 7, 6, 5, 4, 3, 2};
     private static Pattern p, pt, pd;
     private static Matcher m, mt, md;
@@ -103,49 +98,6 @@ public class ServiceValidarDado {
         return dv.equals(calculaDv(base, pesoCafe));
     }
 
-    public static String getChaveNfe(SaidaProdutoNfe saidaProdutoNfe) {
-        String base = gera_BaseChaveNfe(
-                String.format("%02d", TCONFIG.getInfLoja().getCUF()),
-                saidaProdutoNfe.dtHoraEmissaoProperty().getValue().toLocalDate(),
-                TCONFIG.getInfLoja().getCnpj(),
-                String.format("%02d", saidaProdutoNfe.getModelo()),
-                String.format("%03d", saidaProdutoNfe.serieProperty().getValue()),
-                String.format("%09d", saidaProdutoNfe.numeroProperty().getValue()),
-                String.format("%d", saidaProdutoNfe.impressaoTpEmisProperty().getValue())
-        );
-        return String.format("%s%d", base, nfeDv(base));
-    }
-
-    public static String getChaveNfe(IdeVO ideVO) {
-        String base = gera_BaseChaveNfe(
-                String.format("%02d", ideVO.getcUF()),
-                ideVO.getDhEmi().toLocalDate(),
-                TCONFIG.getInfLoja().getCnpj(),
-                String.format("%02d", Integer.parseInt(ideVO.getMod())),
-                String.format("%03d", Integer.parseInt(ideVO.getSerie())),
-                String.format("%09d", Integer.parseInt(ideVO.getnNF())),
-                String.format("%d", Integer.parseInt(ideVO.getTpEmis()))
-        );
-        return String.format("%s%d", base, nfeDv(base));
-    }
-
-    private static String gera_BaseChaveNfe(String cUF, LocalDate dtEmissao, String cnpj, String mod, String serie, String nNF, String tpEmis) {
-        String aAMM = String.format("%02d%02d",
-                dtEmissao.getYear() % 100,
-                dtEmissao.getMonthValue());
-        String cNF = String.format("%04d%s",
-                dtEmissao.getYear(), aAMM);
-
-        return String.format("%s%s%s%s%s%s%s%s",
-                cUF,
-                aAMM,
-                cnpj,
-                mod,
-                serie,
-                nNF,
-                tpEmis,
-                cNF);
-    }
 
 //    public static WebTipo isEmailHomePageValido(final String value, boolean getMsgFaill) {
 //        WebTipo webTipo = null;
@@ -246,16 +198,6 @@ public class ServiceValidarDado {
         return telefoneList;
     }
 
-    public static int nfeDv(final String base) {
-        final String chave = base;
-        int[] numeros = chave.chars().map(Character::getNumericValue).toArray();
-        int resultado = 0;
-        for (int i = numeros.length - 1; i >= 0; i--) {
-            resultado += (numeros[i] * pesoChaveNfeCte[i]);
-        }
-        resultado = 11 - resultado % 11;
-        return resultado > 9 ? 0 : resultado;
-    }
 
 
 }

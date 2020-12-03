@@ -13,7 +13,7 @@ import java.time.LocalTime;
 import java.util.HashMap;
 
 import static br.com.tlmacedo.cafeperfeito.interfaces.Regex_Convert.*;
-import static br.com.tlmacedo.cafeperfeito.service.ServiceVariaveisSistema.TCONFIG;
+import static br.com.tlmacedo.cafeperfeito.service.ServiceConfigSis.TCONFIG;
 
 public class ServiceCampoPersonalizado {
 

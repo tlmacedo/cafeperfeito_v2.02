@@ -7,7 +7,10 @@ import br.com.tlmacedo.cafeperfeito.model.enums.RelatorioTipo;
 import br.com.tlmacedo.cafeperfeito.model.vo.Empresa;
 import br.com.tlmacedo.cafeperfeito.model.vo.SaidaProduto;
 import br.com.tlmacedo.cafeperfeito.model.vo.SaidaProdutoNfe;
-import br.com.tlmacedo.cafeperfeito.service.*;
+import br.com.tlmacedo.cafeperfeito.service.ServiceMascara;
+import br.com.tlmacedo.cafeperfeito.service.ServiceRelatorio;
+import br.com.tlmacedo.cafeperfeito.service.ServiceSegundoPlano;
+import br.com.tlmacedo.cafeperfeito.service.ServiceUtilJSon;
 import br.com.tlmacedo.cafeperfeito.service.alert.Alert_Ok;
 import br.com.tlmacedo.cafeperfeito.service.alert.Alert_YesNo;
 import br.com.tlmacedo.nfe.service.NFev400;
@@ -16,9 +19,9 @@ import javax.sql.rowset.serial.SerialBlob;
 import java.math.BigDecimal;
 
 import static br.com.tlmacedo.cafeperfeito.interfaces.Regex_Convert.DTF_DATA;
-import static br.com.tlmacedo.cafeperfeito.interfaces.Regex_Convert.MY_ZONE_TIME;
-import static br.com.tlmacedo.cafeperfeito.service.ServiceVariaveisNFe.MYINFNFE;
-import static br.com.tlmacedo.cafeperfeito.service.ServiceVariaveisSistema.TCONFIG;
+import static br.com.tlmacedo.cafeperfeito.nfe.NfeService.getChaveNfe;
+import static br.com.tlmacedo.cafeperfeito.service.ServiceConfigNFe.MYINFNFE;
+import static br.com.tlmacedo.cafeperfeito.service.ServiceConfigSis.TCONFIG;
 
 public class Nfe {
 
@@ -47,12 +50,11 @@ public class Nfe {
     public Nfe(SaidaProdutoNfe saidaProdutoNfe, boolean imprimeLote) throws Exception {
         setSaidaProdutoNfe(saidaProdutoNfe);
 
-        ServiceUtilJSon.printJsonFromObject(getSaidaProdutoNfe(), "0004");
-        System.out.printf("\n*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-\n\n\n\n");
-        setnFev400(new NFev400(null,
-                MY_ZONE_TIME,
-                (MYINFNFE.getMyConfig().getTpAmb().intValue() == 1),
-                true));
+        System.out.printf("\n*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-\n");
+        ServiceUtilJSon.printJsonFromObject(getSaidaProdutoNfe(),
+                String.format("emitir NFe do pedido[%s]", getSaidaProdutoNfe().getSaidaProduto().getId()));
+        System.out.printf("*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-\n");
+        setnFev400(new NFev400((MYINFNFE.getMyConfig().getTpAmb().intValue() == 1), true));
         if (errCertificado())
             return;
 
@@ -68,9 +70,9 @@ public class Nfe {
         } else if (getSaidaProdutoNfe().getXmlAssinatura() != null)
             getnFev400().newNFev400_xmlAssinado(getSaidaProdutoNfe().getXmlAssinatura().toString());
         else
-            getnFev400().newNFev400(new Nfe_EnviNfeVO(getSaidaProdutoNfe(), imprimeLote).getEnviNfeVO());
+            getnFev400().setNewNFe(new NfeEnviNfeVO(getSaidaProdutoNfe(), imprimeLote).getEnviNfeVO());
 
-        new ServiceSegundoPlano().executaListaTarefas(getnFev400().getNewTaskNFe(), "NF-e");
+        new ServiceSegundoPlano().executaListaTarefas(getnFev400().newTaskNFe(), "NF-e");
         update_MyNfe();
         new ServiceRelatorio().gerar(RelatorioTipo.NFE, getSaidaProdutoNfe().getXmlProtNfe());
     }
@@ -80,12 +82,12 @@ public class Nfe {
             if (getnFev400().getXmlAssinado() != null)
                 getSaidaProdutoNfe().setXmlAssinatura(new SerialBlob(getnFev400().getXmlAssinado().getBytes()));
 
-            if (NFev400.XML_CONS_RECIBO != null)
-                getSaidaProdutoNfe().setXmlConsRecibo(new SerialBlob(NFev400.XML_CONS_RECIBO.getBytes()));
+            if (NFev400.getXmlConsRecibo() != null)
+                getSaidaProdutoNfe().setXmlConsRecibo(new SerialBlob(NFev400.getXmlConsRecibo().getBytes()));
 
             if (getnFev400().getXmlProcNfe() != null) {
                 getSaidaProdutoNfe().setXmlProtNfe(new SerialBlob(getnFev400().getXmlProcNfe().getBytes()));
-                getSaidaProdutoNfe().setDigVal(NFev400.DIG_VAL);
+                getSaidaProdutoNfe().setDigVal(NFev400.getDigVal());
             }
             setSaidaProdutoNfe(new SaidaProdutoNfeDAO().merger(getSaidaProdutoNfe()));
         } catch (Exception ex) {
@@ -95,7 +97,7 @@ public class Nfe {
     }
 
     private void newSaidaProdutoNfe(boolean imprimeLote) {
-        Empresa emissor = new EmpresaDAO().getById(Empresa.class, (long) TCONFIG.getInfLoja().getId());
+        Empresa emissor = new EmpresaDAO().getById(Empresa.class, (long) TCONFIG.getInfLoja().getId().intValue());
         SaidaProduto saidaProduto = getSaidaProdutoNfe().saidaProdutoProperty().getValue();
 
         getSaidaProdutoNfe().canceladaProperty().setValue(false);
@@ -142,7 +144,7 @@ public class Nfe {
         getSaidaProdutoNfe().xmlConsReciboProperty().setValue(null);
         getSaidaProdutoNfe().xmlProtNfeProperty().setValue(null);
 
-        getSaidaProdutoNfe().chaveProperty().setValue(ServiceValidarDado.getChaveNfe(getSaidaProdutoNfe()));
+        getSaidaProdutoNfe().chaveProperty().setValue(getChaveNfe(getSaidaProdutoNfe()));
         try {
             setSaidaProdutoNfe(new SaidaProdutoNfeDAO().merger(getSaidaProdutoNfe()));
         } catch (Exception exception) {

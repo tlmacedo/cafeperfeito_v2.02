@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static br.com.tlmacedo.cafeperfeito.interfaces.Regex_Convert.DTF_DATA;
-import static br.com.tlmacedo.cafeperfeito.service.ServiceVariaveisSistema.TCONFIG;
+import static br.com.tlmacedo.cafeperfeito.service.ServiceConfigSis.TCONFIG;
 
 public class TmodelSaidaProduto {
 
@@ -51,7 +51,7 @@ public class TmodelSaidaProduto {
     private TableColumn<SaidaProdutoProduto, Integer> colVarejo;
     private TableColumn<SaidaProdutoProduto, Integer> colVolume;
 
-    private IntegerProperty prazo = new SimpleIntegerProperty();
+    private IntegerProperty prazo = new SimpleIntegerProperty(0);
     private IntegerProperty totalQtdItem = new SimpleIntegerProperty(0);
     private IntegerProperty totalQtdProduto = new SimpleIntegerProperty(0);
     private IntegerProperty totalQtdVolume = new SimpleIntegerProperty(0);

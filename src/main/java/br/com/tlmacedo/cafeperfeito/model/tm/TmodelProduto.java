@@ -1,6 +1,5 @@
 package br.com.tlmacedo.cafeperfeito.model.tm;
 
-import br.com.tlmacedo.cafeperfeito.model.dao.ProdutoDAO;
 import br.com.tlmacedo.cafeperfeito.model.enums.TModelTipo;
 import br.com.tlmacedo.cafeperfeito.model.vo.Produto;
 import br.com.tlmacedo.cafeperfeito.model.vo.ProdutoEstoque;
@@ -9,9 +8,7 @@ import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.scene.control.*;
 
@@ -25,10 +22,9 @@ public class TmodelProduto {
 
     private final TModelTipo tModelTipo;
     private Label lblRegistrosLocalizados;
-    private TextField txtPesquisaProduto;
+    private TextField txtPesquisa;
     private TreeTableView<Object> ttvProdutoEstoque;
-    private ObservableList<Produto> produtoObservableList = FXCollections.observableArrayList(new ProdutoDAO().getAll(Produto.class, null, "descricao"));
-    private FilteredList<Produto> produtoFilteredList = new FilteredList<>(getProdutoObservableList());
+    private FilteredList<Produto> produtoFilteredList;
 
     private TreeItem<Object> produtoEstoqueTreeItem;
     private TreeTableColumn<Object, String> colId;
@@ -50,7 +46,7 @@ public class TmodelProduto {
      * Begin voids
      */
 
-    public void criaTabela() {
+    public void tabela_criar() {
         setColId(new TreeTableColumn<>("id"));
         getColId().setPrefWidth(48);
         getColId().setStyle("-fx-alignment: center-right;");
@@ -145,17 +141,17 @@ public class TmodelProduto {
 
     }
 
-    public void preencheTabela() {
+    public void tabela_preencher() {
         setProdutoEstoqueTreeItem(new TreeItem<>());
         getProdutoFilteredList()
                 .forEach(produto -> {
-                            final int[] estq = {0};
-                            TreeItem paiItem = new TreeItem(produto);
-                            getProdutoEstoqueTreeItem().getChildren().add(paiItem);
-                            if (gettModelTipo().equals(TModelTipo.PROD_VENDA))
-                                produto.getProdutoEstoqueList().stream()
-                                        .filter(produtoEstoque -> produtoEstoque.qtdProperty().getValue().compareTo(0) > 0)
-                                        .sorted(Comparator.comparing(ProdutoEstoque::getDtValidade))
+                    final int[] estq = {0};
+                    TreeItem paiItem = new TreeItem(produto);
+                    getProdutoEstoqueTreeItem().getChildren().add(paiItem);
+                    if (gettModelTipo().equals(TModelTipo.PROD_VENDA))
+                        produto.getProdutoEstoqueList().stream()
+                                .filter(produtoEstoque -> produtoEstoque.qtdProperty().getValue().compareTo(0) > 0)
+                                .sorted(Comparator.comparing(ProdutoEstoque::getDtValidade))
                                         .collect(Collectors.groupingBy(ProdutoEstoque::getLote,
                                                 LinkedHashMap::new,
                                                 Collectors.toList()))
@@ -200,7 +196,7 @@ public class TmodelProduto {
             }
         });
 
-        getTxtPesquisaProduto().textProperty().addListener((ov, o, n) -> {
+        getTxtPesquisa().textProperty().addListener((ov, o, n) -> {
             String strFind = n.toLowerCase().trim();
             getProdutoFilteredList().setPredicate(produto -> {
                 if (produto.idProperty().toString().contains(strFind))
@@ -220,7 +216,7 @@ public class TmodelProduto {
 
         getProdutoFilteredList().addListener((ListChangeListener<? super Produto>) change ->
                 Platform.runLater(() -> {
-                    preencheTabela();
+                    tabela_preencher();
                     getTtvProdutoEstoque().refresh();
                 }));
 
@@ -230,7 +226,9 @@ public class TmodelProduto {
     }
 
     public void atualizarProdutos() {
-        getProdutoObservableList().setAll(new ProdutoDAO().getAll(Produto.class, null, "descricao"));
+//        getProdutoFilteredList().setAll(new ProdutoDAO().getAll(Produto.class, null, "descricao"));
+//        getProdutoFilteredList().setAll(new ProdutoDAO().getAll(Produto.class, null, "descricao").stream()
+//                .collect(Collectors.toCollection(FXCollections::observableArrayList)));
         getTtvProdutoEstoque().refresh();
     }
 
@@ -254,12 +252,12 @@ public class TmodelProduto {
         this.lblRegistrosLocalizados = lblRegistrosLocalizados;
     }
 
-    public TextField getTxtPesquisaProduto() {
-        return txtPesquisaProduto;
+    public TextField getTxtPesquisa() {
+        return txtPesquisa;
     }
 
-    public void setTxtPesquisaProduto(TextField txtPesquisaProduto) {
-        this.txtPesquisaProduto = txtPesquisaProduto;
+    public void setTxtPesquisa(TextField txtPesquisa) {
+        this.txtPesquisa = txtPesquisa;
     }
 
     public TreeTableView<Object> getTtvProdutoEstoque() {
@@ -268,14 +266,6 @@ public class TmodelProduto {
 
     public void setTtvProdutoEstoque(TreeTableView<Object> ttvProdutoEstoque) {
         this.ttvProdutoEstoque = ttvProdutoEstoque;
-    }
-
-    public ObservableList<Produto> getProdutoObservableList() {
-        return produtoObservableList;
-    }
-
-    public void setProdutoObservableList(ObservableList<Produto> produtoObservableList) {
-        this.produtoObservableList = produtoObservableList;
     }
 
     public FilteredList<Produto> getProdutoFilteredList() {

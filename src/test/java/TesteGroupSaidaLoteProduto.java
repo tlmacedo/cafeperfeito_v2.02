@@ -2,7 +2,7 @@ import br.com.tlmacedo.cafeperfeito.model.dao.SaidaProdutoDAO;
 import br.com.tlmacedo.cafeperfeito.model.vo.SaidaProduto;
 import br.com.tlmacedo.cafeperfeito.model.vo.SaidaProdutoNfe;
 import br.com.tlmacedo.cafeperfeito.nfe.Nfe;
-import br.com.tlmacedo.cafeperfeito.service.ServiceVariaveisSistema;
+import br.com.tlmacedo.cafeperfeito.service.ServiceConfigSis;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -15,7 +15,7 @@ public class TesteGroupSaidaLoteProduto {
 
 
     public static void main(String[] args) throws Exception {
-        new ServiceVariaveisSistema().getVariaveisSistema();
+        new ServiceConfigSis().getVariaveisSistema();
         setPedido(new SaidaProdutoDAO().getById(SaidaProduto.class, getnPed()));
 
         System.out.printf("iniciando nova NF-e\n");
